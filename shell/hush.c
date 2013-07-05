@@ -428,7 +428,6 @@ enum { run_list_level = 0 };
 #define B_NOSPAC 1
 #define JOB_STATUS_FORMAT "[%d] %-22s %.40s\n"
 
-#if 1
 /* Normal */
 static void syntax(const char *msg)
 {
@@ -440,18 +439,6 @@ static void syntax(const char *msg)
 	fp = (interactive_fd ? bb_error_msg : bb_error_msg_and_die);
 	fp(msg ? "%s: %s" : "syntax error", "syntax error", msg);
 }
-
-#else
-/* Debug */
-static void syntax_lineno(int line)
-{
-	void (*fp)(const char *s, ...);
-
-	fp = (interactive_fd ? bb_error_msg : bb_error_msg_and_die);
-	fp("syntax error hush.c:%d", line);
-}
-#define syntax(str) syntax_lineno(__LINE__)
-#endif
 
 /* Index of subroutines: */
 /*   function prototypes for builtins */
@@ -991,7 +978,6 @@ static int builtin_source(char **argv)
 	if (argv[1] == NULL)
 		return EXIT_FAILURE;
 
-	/* XXX search through $PATH is missing */
 	input = fopen(argv[1], "r");
 	if (!input) {
 		bb_error_msg("cannot open '%s'", argv[1]);
@@ -999,9 +985,6 @@ static int builtin_source(char **argv)
 	}
 
 	/* Now run the file */
-	/* XXX argv and argc are broken; need to save old global_argv
-	 * (pointer only is OK!) on this stack frame,
-	 * set global_argv=argv+1, recurse, and restore. */
 	mark_open(fileno(input));
 	status = parse_and_run_file(input);
 	mark_closed(fileno(input));
@@ -1329,9 +1312,6 @@ static void restore_redirects(int squirrel[])
 }
 
 /* never returns */
-/* XXX no exit() here.  If you don't exec, use _exit instead.
- * The at_exit handlers apparently confuse the calling process,
- * in particular stdin handling.  Not sure why? -- because of vfork! (vda) */
 static void pseudo_exec_argv(char **argv)
 {
 	int i, rcode;
@@ -1341,7 +1321,6 @@ static void pseudo_exec_argv(char **argv)
 	for (i = 0; is_assignment(argv[i]); i++) {
 		debug_printf_exec("pid %d environment modification: %s\n",
 				getpid(), argv[i]);
-// FIXME: vfork case??
 		p = expand_string_to_string(argv[i]);
 		putenv(p);
 	}
@@ -1398,7 +1377,6 @@ static void pseudo_exec_argv(char **argv)
 
 static void pseudo_exec(struct child_prog *child)
 {
-// FIXME: buggy wrt NOMMU! Must not modify any global data
 // until it does exec/_exit, but currently it does.
 	int rcode;
 
@@ -1407,7 +1385,6 @@ static void pseudo_exec(struct child_prog *child)
 	}
 
 	if (child->group) {
-	// FIXME: do not modify globals! Think vfork!
 #if ENABLE_HUSH_INTERACTIVE
 		debug_printf_exec("pseudo_exec: setting interactive_fd=0\n");
 		interactive_fd = 0;    /* crucial!!!! */
@@ -1549,7 +1526,6 @@ static int checkjobs(struct pipe* fg_pipe)
  * 1   <========== bg pipe is not fully done, but exitcode is already known!
  */
 
-//FIXME: non-interactive bash does not continue even if all processes in fg pipe
 //are stopped. Testcase: "cat | cat" in a script (not on command line)
 // + killall -STOP cat
 
@@ -1743,10 +1719,6 @@ static int run_pipe_real(struct pipe *pi)
 					return EXIT_SUCCESS;
 				}
 				debug_printf("builtin inline %s\n", argv[0]);
-				/* XXX setup_redirects acts on file descriptors, not FILEs.
-				 * This is perfect for work that comes after exec().
-				 * Is it really safe for inline use?  Experimentally,
-				 * things seem to work with glibc. */
 				setup_redirects(child, squirrel);
 				debug_printf_exec(": builtin '%s' '%s'...\n", x->cmd, argv[i+1]);
 				//sp: if (child->sp) /* btw we can do it unconditionally... */
@@ -1801,7 +1773,6 @@ static int run_pipe_real(struct pipe *pi)
 			pipefds[0] = -1;
 		}
 
-		/* XXX test for failed fork()? */
 #if BB_MMU
 		child->pid = fork();
 #else
@@ -2245,13 +2216,6 @@ static int run_list(struct pipe *pi)
 	return rcode;
 }
 
-/* The API for glob is arguably broken.  This routine pushes a non-matching
- * string into the output structure, removing non-backslashed backslashes.
- * If someone can prove me wrong, by performing this function within the
- * original glob(3) api, feel free to rewrite this routine into oblivion.
- * Return code (0 vs. GLOB_NOSPACE) matches glob(3).
- * XXX broken if the last character is '\\', check that before calling.
- */
 static int globhack(const char *src, int flags, glob_t *pglob)
 {
 	int cnt = 0, pathc;
@@ -2280,7 +2244,6 @@ static int globhack(const char *src, int flags, glob_t *pglob)
 	return 0;
 }
 
-/* XXX broken if the last character is '\\', check that before calling */
 static int glob_needed(const char *s)
 {
 	for (; *s; s++) {
@@ -2474,7 +2437,6 @@ static int expand_vars_to_list(char **list, int n, char **posp, char *arg, char 
 		switch (first_ch & 0x7f) {
 		/* Highest bit in first_ch indicates that var is double-quoted */
 		case '$': /* pid */
-			/* FIXME: (echo $$) should still print pid of main shell */
 			val = utoa(getpid());
 			break;
 		case '!': /* bg pid */
@@ -3293,7 +3255,6 @@ static int handle_dollar(o_string *dest, struct p_context *ctx, struct in_str *i
 			b_addchr(dest, SPECIAL_VAR_SYMBOL);
 			//sp: ctx->child->sp++;
 			b_getch(input);
-			/* XXX maybe someone will try to escape the '}' */
 			while (1) {
 				ch = b_getch(input);
 				if (ch == '}')
@@ -3446,13 +3407,6 @@ static int parse_stream(o_string *dest, struct p_context *ctx,
 				redir_style = REDIRECT_APPEND;
 				b_getch(input);
 			}
-#if 0
-			else if (next == '(') {
-				syntax(">(process) not supported");
-				debug_printf_parse("parse_stream return 1: >(process) not supported\n");
-				return 1;
-			}
-#endif
 			setup_redirect(ctx, redir_fd, redir_style, input);
 			break;
 		case '<':
@@ -3466,13 +3420,6 @@ static int parse_stream(o_string *dest, struct p_context *ctx,
 				redir_style = REDIRECT_IO;
 				b_getch(input);
 			}
-#if 0
-			else if (next == '(') {
-				syntax("<(process) not supported");
-				debug_printf_parse("parse_stream return 1: <(process) not supported\n");
-				return 1;
-			}
-#endif
 			setup_redirect(ctx, redir_fd, redir_style, input);
 			break;
 		case ';':
@@ -3697,7 +3644,6 @@ int hush_main(int argc, char **argv)
 #if ENABLE_FEATURE_EDITING
 	line_input_state = new_line_input_t(FOR_SHELL);
 #endif
-	/* XXX what should these be while sourcing /etc/profile? */
 	global_argc = argc;
 	global_argv = argv;
 	/* Initialize some more globals to non-zero values */
@@ -3782,7 +3728,6 @@ int hush_main(int argc, char **argv)
 		setup_job_control();
 		/* Make xfuncs do cleanup on exit */
 		die_sleep = -1; /* flag */
-// FIXME: should we reset die_sleep = 0 whereever we fork?
 		if (setjmp(die_jmp)) {
 			/* xfunc has failed! die die die */
 			hush_exit(xfunc_error_retval);

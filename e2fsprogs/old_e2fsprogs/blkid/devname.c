@@ -136,12 +136,6 @@ set_pri:
 #define PROC_PARTITIONS "/proc/partitions"
 #define VG_DIR		"/proc/lvm/VGs"
 
-/*
- * This function initializes the UUID cache with devices from the LVM
- * proc hierarchy.  We currently depend on the names of the LVM
- * hierarchy giving us the device structure in /dev.  (XXX is this a
- * safe thing to do?)
- */
 #ifdef VG_DIR
 #include <dirent.h>
 static dev_t lvm_get_devno(const char *lvm_device)
@@ -298,16 +292,6 @@ int blkid_probe_all(blkid_cache cache)
 
 		DBG(DEBUG_DEVNAME, printf("read partition name %s\n", ptname));
 
-		/* Skip whole disk devs unless they have no partitions
-		 * If we don't have a partition on this dev, also
-		 * check previous dev to see if it didn't have a partn.
-		 * heuristic: partition name ends in a digit.
-		 *
-		 * Skip extended partitions.
-		 * heuristic: size is 1
-		 *
-		 * FIXME: skip /dev/{ida,cciss,rd} whole-disk devs
-		 */
 
 		lens[which] = strlen(ptname);
 		if (isdigit(ptname[lens[which] - 1])) {

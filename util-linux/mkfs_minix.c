@@ -679,12 +679,6 @@ int mkfs_minix_main(int argc, char **argv)
 
 /* I don't know why someone has special code to prevent mkfs.minix
  * on IDE devices. Why IDE but not SCSI, etc?... */
-#if 0
-	else if (statbuf.st_rdev == 0x0300 || statbuf.st_rdev == 0x0340)
-		/* what is this? */
-		bb_error_msg_and_die("will not try "
-			"to make filesystem on '%s'", G.device_name);
-#endif
 
 	tmp = G.root_block;
 	*(short *) tmp = 1;

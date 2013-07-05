@@ -100,17 +100,3 @@
 #define EXT2_ET_RES_GDT_BLOCKS                   (2133571421L)
 #define EXT2_ET_RESIZE_INODE_CORRUPT             (2133571422L)
 #define EXT2_ET_SET_BMAP_NO_IND                  (2133571423L)
-
-#if 0
-extern const struct error_table et_ext2_error_table;
-extern void initialize_ext2_error_table(void);
-
-/* For compatibility with Heimdal */
-extern void initialize_ext2_error_table_r(struct et_list **list);
-
-#define ERROR_TABLE_BASE_ext2 (2133571328L)
-
-/* for compatibility with older versions... */
-#define init_ext2_err_tbl initialize_ext2_error_table
-#define ext2_err_base ERROR_TABLE_BASE_ext2
-#endif

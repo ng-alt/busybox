@@ -825,7 +825,6 @@ static servtab_t *getconfigent(void)
 				}
 			}
 		}
-/* XXX BUG?: is this skip: label supposed to remain? */
  skip:
 		nsep = nsep->se_next;
 	}
@@ -998,7 +997,6 @@ static void config(int sig ATTRIBUTE_UNUSED)
 #if ENABLE_FEATURE_INETD_RPC
 			if (isrpcservice(sep)) {
 				struct rpcent *rp;
-				// FIXME: atoi_or_else(str, 0) would be handy here
 				sep->se_rpcprog = atoi(sep->se_service);
 				if (sep->se_rpcprog == 0) {
 					rp = getrpcbyname(sep->se_service);
@@ -1016,9 +1014,8 @@ static void config(int sig ATTRIBUTE_UNUSED)
 #endif
 			{
 				uint16_t port = htons(atoi(sep->se_service));
-				// FIXME: atoi_or_else(str, 0) would be handy here
 				if (!port) {
-					 /*XXX*/ strncpy(protoname, sep->se_proto, sizeof(protoname));
+ strncpy(protoname, sep->se_proto, sizeof(protoname));
 					if (isdigit(protoname[strlen(protoname) - 1]))
 						protoname[strlen(protoname) - 1] = '\0';
 					sp = getservbyname(sep->se_service, protoname);
@@ -1071,7 +1068,7 @@ static void config(int sig ATTRIBUTE_UNUSED)
 				uint16_t port = htons(atoi(sep->se_service));
 
 				if (!port) {
-					 /*XXX*/ strncpy(protoname, sep->se_proto, sizeof(protoname));
+ strncpy(protoname, sep->se_proto, sizeof(protoname));
 					if (isdigit(protoname[strlen(protoname) - 1]))
 						protoname[strlen(protoname) - 1] = '\0';
 					sp = getservbyname(sep->se_service, protoname);
@@ -1192,7 +1189,6 @@ static void goaway(int sig ATTRIBUTE_UNUSED)
 {
 	servtab_t *sep;
 
-	/* XXX signal race walking sep list */
 	for (sep = servtab; sep; sep = sep->se_next) {
 		if (sep->se_fd == -1)
 			continue;
@@ -1207,7 +1203,7 @@ static void goaway(int sig ATTRIBUTE_UNUSED)
 #endif
 #if ENABLE_FEATURE_INETD_RPC
 			if (sep->se_wait == 1 && isrpcservice(sep))
-				unregister_rpc(sep);   /* XXX signal race */
+				unregister_rpc(sep);
 #endif
 			break;
 		}
@@ -1385,7 +1381,6 @@ int inetd_main(int argc, char **argv)
 						continue;
 					}
 					if (ntohs(peer.sin_port) == 20) {
-						/* XXX ftp bounce */
 						close(ctrl);
 						continue;
 					}
@@ -1525,7 +1520,6 @@ static int dg_badinput(struct sockaddr_in *dg_sin)
 		return 1;
 	if (dg_sin->sin_addr.s_addr == htonl(INADDR_BROADCAST))
 		return 1;
-	/* XXX compare against broadcast addresses in SIOCGIFCONF list? */
 	return 0;
 }
 #endif
@@ -1543,7 +1537,6 @@ echo_stream(int s, servtab_t *sep)
 	while (1) {
 		i = read(s, buffer, sizeof(buffer));
 		if (i <= 0) break;
-		/* FIXME: this isnt correct - safe_write()? */
 		if (write(s, buffer, i) <= 0) break;
 	}
 	exit(0);

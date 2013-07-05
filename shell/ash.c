@@ -1499,16 +1499,6 @@ static char **argptr;                  /* argument list for builtin commands */
 static char *optionarg;                /* set by nextopt (like getopt) */
 static char *optptr;                   /* used by nextopt */
 
-/*
- * XXX - should get rid of.  have all builtins use getopt(3).  the
- * library getopt must have the BSD extension static variable "optreset"
- * otherwise it can't be used within the shell safely.
- *
- * Standard option processing (a la getopt) for builtin routines.  The
- * only argument that is passed to nextopt is the option string; the
- * other arguments are unnecessary.  It return the character, or '\0' on
- * end of input.
- */
 static int
 nextopt(const char *optstring)
 {
@@ -3456,10 +3446,6 @@ setjobctl(int on)
 		int ofd;
 		ofd = fd = open(_PATH_TTY, O_RDWR);
 		if (fd < 0) {
-	/* BTW, bash will try to open(ttyname(0)) if open("/dev/tty") fails.
-	 * That sometimes helps to acquire controlling tty.
-	 * Obviously, a workaround for bugs when someone
-	 * failed to provide a controlling tty to bash! :) */
 			fd += 3;
 			while (!isatty(fd) && --fd >= 0)
 				;
@@ -3897,7 +3883,6 @@ getstatus(struct job *job)
 		if (!WIFSTOPPED(status))
 #endif
 		{
-			/* XXX: limits number of signals */
 			retval = WTERMSIG(status);
 #if JOBS
 			if (retval == SIGINT)
@@ -6288,7 +6273,7 @@ expandmeta(struct strlist *str, int flag)
 		p = preglob(str->text, 0, RMESCAPE_ALLOC | RMESCAPE_HEAP);
 		{
 			int i = strlen(str->text);
-			expdir = ckmalloc(i < 2048 ? 2048 : i); /* XXX */
+			expdir = ckmalloc(i < 2048 ? 2048 : i);
 		}
 
 		expmeta(expdir, p);
@@ -6348,7 +6333,7 @@ expandarg(union node *arg, struct arglist *arglist, int flag)
 		exparg.lastp = &exparg.list;
 		expandmeta(exparg.list, flag);
 	} else {
-		if (flag & EXP_REDIR) /*XXX - for now, just remove escapes */
+		if (flag & EXP_REDIR)
 			rmescapes(p);
 		sp = stalloc(sizeof(*sp));
 		sp->text = p;
@@ -7551,7 +7536,6 @@ evalfor(union node *n, int flags)
 	arglist.lastp = &arglist.list;
 	for (argp = n->nfor.args; argp; argp = argp->narg.next) {
 		expandarg(argp, &arglist, EXP_FULL | EXP_TILDE | EXP_RECORD);
-		/* XXX */
 		if (evalskip)
 			goto out;
 	}
@@ -10782,7 +10766,6 @@ expandstr(const char *ps)
 {
 	union node n;
 
-	/* XXX Fix (char *) cast. */
 	setinputstring((char *)ps);
 	readtoken1(pgetc(), DQSYNTAX, nullstr, 0);
 	popfile();
@@ -12845,7 +12828,7 @@ int ash_main(int argc, char **argv)
 				line_input_state->hist_file = hp;
 		}
 #endif
- state4: /* XXX ??? - why isn't this before the "if" statement */
+ state4:
 		cmdloop(1);
 	}
 #if PROFILE

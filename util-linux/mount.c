@@ -37,7 +37,6 @@
 /* OTOH: why we use getmntent_r instead of getmntent? TODO... */
 struct mntent *getmntent_r(FILE* stream, struct mntent* result, char* buffer, int bufsize)
 {
-	/* *** XXX FIXME WARNING: This hack is NOT thread safe. --Sampo */
 	struct mntent* ment = getmntent(stream);
 	memcpy(result, ment, sizeof(struct mntent));
 	return result;
@@ -248,7 +247,6 @@ static int fakeIt;
 #endif
 
 // Perform actual mount of specific filesystem at specific location.
-// NB: mp->xxx fields may be trashed on exit
 static int mount_it_now(struct mntent *mp, int vfsflags, char *filteropts)
 {
 	int rc = 0;
@@ -345,7 +343,7 @@ static int mount_it_now(struct mntent *mp, int vfsflags, char *filteropts)
 
 /* This is just a warning of a common mistake.  Possibly this should be a
  * uclibc faq entry rather than in busybox... */
-#if defined(__UCLIBC__) && ! defined(__UCLIBC_HAS_RPC__)
+#if defined(__UCLIBC__) && !defined(__UCLIBC_HAS_RPC__)
 #error "You need to build uClibc with UCLIBC_HAS_RPC for NFS support."
 #endif
 
@@ -764,7 +762,6 @@ static void error_msg_rpc(const char *msg)
 	bb_error_msg("%.*s", len, msg);
 }
 
-// NB: mp->xxx fields may be trashed on exit
 static int nfsmount(struct mntent *mp, int vfsflags, char *filteropts)
 {
 	CLIENT *mclient;
@@ -1370,7 +1367,6 @@ int nfsmount(struct mntent *mp, int vfsflags, char *filteropts);
 
 // Mount one directory.  Handles CIFS, NFS, loopback, autobind, and filesystem
 // type detection.  Returns 0 for success, nonzero for failure.
-// NB: mp->xxx fields may be trashed on exit
 static int singlemount(struct mntent *mp, int ignore_busy)
 {
 	int rc = -1, vfsflags;
@@ -1582,7 +1578,6 @@ int mount_main(int argc, char **argv)
 			while (getmntent_r(mountTable, mtpair, bb_common_bufsiz1,
 								sizeof(bb_common_bufsiz1)))
 			{
-				// Don't show rootfs. FIXME: why??
 				// util-linux 2.12a happily shows rootfs...
 				//if (!strcmp(mtpair->mnt_fsname, "rootfs")) continue;
 

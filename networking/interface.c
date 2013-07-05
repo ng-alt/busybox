@@ -346,33 +346,6 @@ smallint interface_opt_a;	/* show all interfaces */
 static struct interface *int_list, *int_last;
 
 
-#if 0
-/* like strcmp(), but knows about numbers */
-except that the freshly added calls to xatoul() brf on ethernet aliases with
-uClibc with e.g.: ife->name='lo'  name='eth0:1'
-static int nstrcmp(const char *a, const char *b)
-{
-	const char *a_ptr = a;
-	const char *b_ptr = b;
-
-	while (*a == *b) {
-		if (*a == '\0') {
-			return 0;
-		}
-		if (!isdigit(*a) && isdigit(*(a+1))) {
-			a_ptr = a+1;
-			b_ptr = b+1;
-		}
-		a++;
-		b++;
-	}
-
-	if (isdigit(*a) && isdigit(*b)) {
-		return xatoul(a_ptr) > xatoul(b_ptr) ? 1 : -1;
-	}
-	return *a - *b;
-}
-#endif
 
 static struct interface *add_interface(char *name)
 {
@@ -707,7 +680,8 @@ static const struct hwtype loop_hwtype = {
 
 #include <net/if_arp.h>
 
-#if (defined(__GLIBC__) && __GLIBC__ >= 2 && __GLIBC_MINOR__ >= 1) || defined(_NEWLIB_VERSION)
+#if (defined(__GLIBC__) && __GLIBC__ >= 2 && __GLIBC_MINOR__ >= 1) || \
+	defined(_NEWLIB_VERSION)
 #include <net/ethernet.h>
 #else
 #include <linux/if_ether.h>
@@ -1078,10 +1052,6 @@ static void ife_print(struct interface *ptr)
 	/* If needed, display the interface statistics. */
 
 	if (ptr->statistics_valid) {
-		/* XXX: statistics are currently only printed for the primary address,
-		 *      not for the aliases, although strictly speaking they're shared
-		 *      by all addresses.
-		 */
 		printf("          ");
 
 		printf("RX packets:%llu errors:%lu dropped:%lu overruns:%lu frame:%lu\n",

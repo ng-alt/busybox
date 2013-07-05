@@ -256,7 +256,6 @@ int zcip_main(int argc, char **argv)
 	if (ip.s_addr == 0)
 		pick(&ip);
 
-	// FIXME cases to handle:
 	//  - zcip already running!
 	//  - link already has local address... just defend/update
 
@@ -291,7 +290,6 @@ int zcip_main(int argc, char **argv)
 		// poll, being ready to adjust current timeout
 		if (!timeout_ms) {
 			timeout_ms = ms_rdelay(PROBE_WAIT);
-			// FIXME setsockopt(fd, SO_ATTACH_FILTER, ...) to
 			// make the kernel filter out all packets except
 			// ones we'd care about.
 		}
@@ -359,7 +357,6 @@ int zcip_main(int argc, char **argv)
 					// Switch to monitor state.
 					state = MONITOR;
 					// link is ok to use earlier
-					// FIXME update filters
 					script_av[1] = (char*)"config";
 					run(script_av, intf, &ip);
 					ready = 1;
@@ -408,7 +405,6 @@ int zcip_main(int argc, char **argv)
 
 			if ((fds[0].revents & POLLIN) == 0) {
 				if (fds[0].revents & POLLERR) {
-					// FIXME: links routinely go down;
 					// this shouldn't necessarily exit.
 					bb_error_msg("%s: poll error", intf);
 					if (ready) {

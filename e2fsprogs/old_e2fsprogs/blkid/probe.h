@@ -298,8 +298,8 @@ static __u16 blkid_swab16(__u16 val);
 static __u32 blkid_swab32(__u32 val);
 static __u64 blkid_swab64(__u64 val);
 
-#if ((defined __GNUC__) && \
-     (defined(__i386__) || defined(__i486__) || defined(__i586__)))
+#if ((defined __GNUC__) && (defined(__i386__) || defined(__i486__) || \
+	defined(__i586__)))
 
 #define _BLKID_HAVE_ASM_BITOPS_
 

@@ -27,7 +27,7 @@
  * Some heuristics to find out what environment we are in: if it is not
  * System V, assume it is SunOS 4.
  */
-#ifdef LOGIN_PROCESS                    /* defined in System V utmp.h */
+#ifdef LOGIN_PROCESS                        /* defined in System V utmp.h */
 #define SYSV_STYLE                      /* select System V style getty */
 #include <sys/utsname.h>
 #include <time.h>

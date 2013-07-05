@@ -3943,4 +3943,13 @@ USE_FEATURE_RUN_PARTS_FANCY("\n	-l	Prints names of all matching files even when 
        "	-r 169.254.x.x	Request this address first\n" \
        "	-v		Verbose"
 
+#define flash_eraseall_trivial_usage \
+	"[-jq] MTD_DEVICE" \
+
+#define flash_eraseall_full_usage "\n\n" \
+	"Erase an MTD device\n" \
+	"\n        -j      Format the device for jffs2" \
+	"\n        -q      Don't display progress messages" \
+
+
 #endif /* __BB_USAGE_H__ */

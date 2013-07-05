@@ -77,25 +77,6 @@ static int maxfd;
 static struct tsession *sessions;
 
 
-/*
-   Remove all IAC's from the buffer pointed to by bf (received IACs are ignored
-   and must be removed so as to not be interpreted by the terminal).  Make an
-   uninterrupted string of characters fit for the terminal.  Do this by packing
-   all characters meant for the terminal sequentially towards the end of bf.
-
-   Return a pointer to the beginning of the characters meant for the terminal.
-   and make *num_totty the number of characters that should be sent to
-   the terminal.
-
-   Note - If an IAC (3 byte quantity) starts before (bf + len) but extends
-   past (bf + len) then that IAC will be left unprocessed and *processed will be
-   less than len.
-
-   FIXME - if we mean to send 0xFF to the terminal then it will be escaped,
-   what is the escape character?  We aren't handling that situation here.
-
-   CR-LF ->'s CR mapping is also done here, for convenience
- */
 static char *
 remove_iacs(struct tsession *ts, int *pnum_totty)
 {
@@ -167,7 +148,10 @@ static int
 getpty(char *line, int size)
 {
 	int p;
-#if ENABLE_FEATURE_DEVPTS
+    /* modified start, water, @telnet not workable, 09/11/02*/
+//#if ENABLE_FEATURE_DEVPTS
+#if 0
+    /* modified end, water, @telnet not workable, 09/11/02*/
 	p = open("/dev/ptmx", O_RDWR);
 	if (p > 0) {
 		const char *name;

@@ -62,4 +62,3 @@ typedef struct journal_superblock_s
 	__u32		s_start;	/* blocknr of start of log */
 
 } journal_superblock_t;
-

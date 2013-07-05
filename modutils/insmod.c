@@ -266,7 +266,7 @@ extern int insmod_ng_main( int argc, char **argv);
 # error insmod.c may require changes for use on big endian SH
 #endif
 /* it may or may not work on the SH1/SH2... Error on those also */
-#if ((!(defined(__SH3__) || defined(__SH4__) || defined(__SH5__)))) && (defined(__sh__))
+#if !(defined(__SH3__) || defined(__SH4__) || defined(__SH5__)) && defined(__sh__)
 #error insmod.c may require changes for SH1 or SH2 use
 #endif
 #endif
@@ -288,7 +288,7 @@ extern int insmod_ng_main( int argc, char **argv);
 #define USE_PLT_ENTRIES
 #define PLT_ENTRY_SIZE 8
 #define USE_SINGLE
-#ifndef EM_CYGNUS_V850	/* grumble */
+#ifndef EM_CYGNUS_V850	    /* grumble */
 #define EM_CYGNUS_V850	0x9080
 #endif
 #define SYMBOL_PREFIX	"_"
@@ -860,7 +860,8 @@ arch_apply_relocation(struct obj_file *f,
 #if defined(USE_GOT_ENTRIES) || defined(USE_PLT_ENTRIES)
 	struct arch_symbol *isym = (struct arch_symbol *) sym;
 #endif
-#if defined(__arm__) || defined(__i386__) || defined(__mc68000__) || defined(__sh__) || defined(__s390__)
+#if defined(__arm__) || defined(__i386__) || defined(__mc68000__) || defined(__sh__) || \
+	defined(__s390__)
 #if defined(USE_GOT_ENTRIES)
 	ElfW(Addr) got = ifile->got ? ifile->got->header.sh_addr : 0;
 #endif
@@ -1611,19 +1612,6 @@ arch_apply_relocation(struct obj_file *f,
 		case R_X86_64_GOT32:
 		case R_X86_64_GOTPCREL:
 			goto bb_use_got;
-# if 0
-			if (!isym->gotent.reloc_done)
-			{
-				isym->gotent.reloc_done = 1;
-				*(Elf64_Addr *)(ifile->got->contents + isym->gotent.offset) = v;
-			}
-			/* XXX are these really correct?  */
-			if (ELF64_R_TYPE(rel->r_info) == R_X86_64_GOTPCREL)
-				*(unsigned int *) loc += v + isym->gotent.offset;
-			else
-				*loc += isym->gotent.offset;
-			break;
-# endif
 
 #else
 # warning "no idea how to handle relocations on your arch"
@@ -3249,7 +3237,6 @@ static int obj_relocate(struct obj_file *f, ElfW(Addr) base)
 			}
 #if SHT_RELM == SHT_RELA
 #if defined(__alpha__) && defined(AXP_BROKEN_GAS)
-			/* Work around a nasty GAS bug, that is fixed as of 2.7.0.9.  */
 			if (!extsym || !extsym->st_name ||
 					ELF_ST_BIND(extsym->st_info) != STB_LOCAL)
 #endif
@@ -3543,10 +3530,6 @@ static struct obj_file *obj_load(FILE * fp, int loadprogbits)
 				return NULL;
 			}
 			break;
-			/* XXX  Relocation code from modutils-2.3.19 is not here.
-			 * Why?  That's about 20 lines of code from obj/obj_load.c,
-			 * which gets done in a second pass through the sections.
-			 * This BusyBox insmod does similar work in obj_relocate(). */
 		}
 	}
 
@@ -4283,28 +4266,8 @@ int insmod_ng_main(int argc, char **argv)
 		optlen += sprintf(options + optlen, (strchr(*argv,' ') ? "\"%s\" " : "%s "), *argv);
 	}
 
-#if 0
-	/* Any special reason why mmap? It isn't performace critical... */
-	int fd;
-	struct stat st;
-	unsigned long len;
-	fd = xopen(filename, O_RDONLY);
-	fstat(fd, &st);
-	len = st.st_size;
-	map = mmap(NULL, len, PROT_READ, MAP_PRIVATE, fd, 0);
-	if (map == MAP_FAILED) {
-		bb_perror_msg_and_die("cannot mmap '%s'", filename);
-	}
-
-	/* map == NULL on Blackfin, probably on other MMU-less systems too. Workaround. */
-	if (map == NULL) {
-		map = xmalloc(len);
-		xread(fd, map, len);
-	}
-#else
 	len = MAXINT(ssize_t);
 	map = xmalloc_open_read_close(filename, &len);
-#endif
 
 	ret = syscall(__NR_init_module, map, len, options);
 	if (ret != 0) {

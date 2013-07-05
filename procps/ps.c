@@ -178,7 +178,6 @@ static const ps_out_t* find_out_spec(const char *name)
 static void parse_o(char* opt)
 {
 	ps_out_t* new;
-	// POSIX: "-o is blank- or comma-separated list" (FIXME)
 	char *comma, *equal;
 	while (1) {
 		comma = strchr(opt, ',');
@@ -295,7 +294,6 @@ int ps_main(int argc, char **argv)
 	// -l  Generate a long listing
 	// -o col1,col2,col3=header
 	//     Select which columns to display
-	/* We allow (and ignore) most of the above. FIXME */
 	opt_complementary = "o::";
 	USE_SELINUX(opt =) getopt32(argv, "Zo:aAdefl", &opt_o);
 	if (opt_o) {

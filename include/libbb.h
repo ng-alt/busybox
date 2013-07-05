@@ -1033,9 +1033,6 @@ extern char bb_common_bufsiz1[COMMON_BUFSIZE];
 /* This struct is deliberately not defined. */
 /* See docs/keep_data_small.txt */
 struct globals;
-/* '*const' ptr makes gcc optimize code much better.
- * Magic prevents ptr_to_globals from going into rodata.
- * If you want to assign a value, use PTR_TO_GLOBALS = xxx */
 extern struct globals *const ptr_to_globals;
 #define PTR_TO_GLOBALS (*(struct globals**)&ptr_to_globals)
 

@@ -26,16 +26,6 @@
  * %End-Header%
  */
 
-/* All filesystem specific hooks have been removed.
- * If filesystem cannot be determined, we will execute
- * "fsck.auto". Currently this also happens if you specify
- * UUID=xxx or LABEL=xxx as an object to check.
- * Detection code for that is also probably has to be in fsck.auto.
- *
- * In other words, this is _really_ is just a driver program which
- * spawns actual fsck.something for each filesystem to check.
- * It doesn't guess filesystem types from on-disk format.
- */
 
 #include "libbb.h"
 
@@ -89,16 +79,6 @@ static const char ignored_types[] ALIGN1 =
 	"tmpfs\0"
 	"devpts\0";
 
-#if 0
-static const char really_wanted[] ALIGN1 =
-	"minix\0"
-	"ext2\0"
-	"ext3\0"
-	"jfs\0"
-	"reiserfs\0"
-	"xiafs\0"
-	"xfs\0";
-#endif
 
 #define BASE_MD "/dev/md"
 
@@ -777,10 +757,8 @@ static int opt_in_list(char *opt, char *optlist)
 		s = strstr(s + 1, opt);
 		if (!s)
 			return 0;
-		/* neither "opt.." nor "xxx,opt.."? */
 		if (s != optlist && s[-1] != ',')
 			continue;
-		/* neither "..opt" nor "..opt,xxx"? */
 		if (s[len] != '\0' && s[len] != ',')
 			continue;
 		return 1;
@@ -1045,11 +1023,7 @@ static void parse_args(int argc, char **argv)
 	for (i = 1; i < argc; i++) {
 		arg = argv[i];
 
-		/* "/dev/blk" or "/path" or "UUID=xxx" or "LABEL=xxx" */
 		if ((arg[0] == '/' && !opts_for_fsck) || strchr(arg, '=')) {
-// FIXME: must check that arg is a blkdev, or resolve
-// "/path", "UUID=xxx" or "LABEL=xxx" into block device name
-// ("UUID=xxx"/"LABEL=xxx" can probably shifted to fsck.auto duties)
 			devices = xrealloc(devices, (num_devices+1) * sizeof(devices[0]));
 			devices[num_devices++] = xstrdup(arg);
 			continue;

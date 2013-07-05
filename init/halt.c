@@ -35,7 +35,7 @@ RB_AUTOBOOT
 	for (which = 0; "hpr"[which] != *applet_name; which++);
 
 	/* Parse and handle arguments */
-	flags = getopt32(argv, "d:nf", &delay);
+	flags = getopt32(argv, "d:nf:q", &delay);
 	if (flags & 1) sleep(xatou(delay));
 	if (!(flags & 2)) sync();
 
@@ -50,8 +50,13 @@ RB_AUTOBOOT
 		}
 		if (rc)
 			rc = kill(1, signals[which]);
-	} else
+	} else {
+#ifdef __CONFIG_USBAP__
+		rc = kill(1, signals[which]);
+#else
 		rc = reboot(magic[which]);
+#endif
+	}
 
 	if (rc)
 		bb_error_msg("no");

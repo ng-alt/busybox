@@ -336,22 +336,6 @@ static int search_package_hashtable(const unsigned name, const unsigned version,
 	return probe_address;
 }
 
-/*
- * This function searches through the entire package_hashtable looking
- * for a package which provides "needle". It returns the index into
- * the package_hashtable for the providing package.
- *
- * needle is the index into name_hashtable of the package we are
- * looking for.
- *
- * start_at is the index in the package_hashtable to start looking
- * at. If start_at is -1 then start at the beginning. This is to allow
- * for repeated searches since more than one package might provide
- * needle.
- *
- * FIXME: I don't think this is very efficient, but I thought I'd keep
- * it simple for now until it proves to be a problem.
- */
 static int search_for_provides(int needle, int start_at)
 {
 	int i, j;

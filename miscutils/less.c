@@ -28,7 +28,6 @@
 #include "xregex.h"
 #endif
 
-/* FIXME: currently doesn't work right */
 #undef ENABLE_FEATURE_LESS_FLAGCS
 #define ENABLE_FEATURE_LESS_FLAGCS 0
 
@@ -1319,8 +1318,6 @@ int less_main(int argc, char **argv)
 	INIT_G();
 
 	/* TODO: -x: do not interpret backspace, -xx: tab also */
-	/* -xxx: newline also */
-	/* -w N: assume width N (-xxx -w 32: hex viewer of sorts) */
 	getopt32(argv, "EMmN~");
 	argc -= optind;
 	argv += optind;

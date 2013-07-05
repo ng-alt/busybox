@@ -349,7 +349,6 @@ static int parse_subst_cmd(sed_cmd_t *sed_cmd, const char *substr)
 			if (match[0] != '^') {
 				/* Match 0 treated as all, multiple matches we take the last one. */
 				const char *pos = substr + idx;
-/* FIXME: error check? */
 				sed_cmd->which_match = (unsigned short)strtol(substr+idx, (char**) &pos, 10);
 				idx = pos - substr;
 			}
@@ -647,10 +646,6 @@ static int do_subst_command(sed_cmd_t *sed_cmd, char **line)
 	do {
 		int i;
 
-		/* Work around bug in glibc regexec, demonstrated by:
-		   echo " a.b" | busybox sed 's [^ .]* x g'
-		   The match_count check is so not to break
-		   echo "hi" | busybox sed 's/^/!/g' */
 		if (!G.regmatch[0].rm_so && !G.regmatch[0].rm_eo && match_count) {
 			pipe_putc(*oldline++);
 			continue;
@@ -1334,7 +1329,6 @@ int sed_main(int argc, char **argv)
 
 			G.nonstdout = stdout;
 			/* unlink(argv[i]); */
-			// FIXME: error check / message?
 			rename(G.outname, argv[i]);
 			free(G.outname);
 			G.outname = 0;

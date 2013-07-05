@@ -151,4 +151,3 @@ dochroot()
   umount -l tmpdir4chroot
   rmdir tmpdir4chroot
 }
-

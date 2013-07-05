@@ -157,7 +157,6 @@ int crontab_main(int ac, char **av)
 		break;
 	case EDIT:
 		{
-/* FIXME: messy code here! we have file copying helpers for this! */
 			FILE *fi;
 			int fd;
 			int n;

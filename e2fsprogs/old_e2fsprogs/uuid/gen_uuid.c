@@ -182,10 +182,6 @@ static int get_node_id(unsigned char *node_id)
 			continue;
 		a = (unsigned char *) &sdlp->sdl_data[sdlp->sdl_nlen];
 #else
-		/*
-		 * XXX we don't have a way of getting the hardware
-		 * address
-		 */
 		close(sd);
 		return 0;
 #endif /* HAVE_NET_IF_DL_H */

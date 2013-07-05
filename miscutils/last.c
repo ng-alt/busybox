@@ -18,8 +18,8 @@
  * Do what we can while still keeping this reasonably small.
  * Note: We are assuming the ut_id[] size is fixed at 4. */
 
-#if defined UT_LINESIZE \
-	&& ((UT_LINESIZE != 32) || (UT_NAMESIZE != 32) || (UT_HOSTSIZE != 256))
+#if defined UT_LINESIZE && ((UT_LINESIZE != 32) || (UT_NAMESIZE != 32) || (UT_HOSTSIZE \
+	!= 256))
 #error struct utmp member char[] size(s) have changed!
 #elif defined __UT_LINESIZE \
 	&& ((__UT_LINESIZE != 32) || (__UT_NAMESIZE != 64) || (__UT_HOSTSIZE != 256))

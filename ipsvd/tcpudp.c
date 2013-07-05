@@ -342,18 +342,6 @@ int tcpudpsvd_main(int argc, char **argv)
 		 * which is already buffered for us! And we cannot use fd #1
 		 * instead - it will "intercept" all following packets, but child
 		 * does not expect data coming *from fd #1*! */
-#if 0
-		/* Make it so that local addr is fixed to localp->sa
-		 * and we don't accidentally accept packets to other local IPs. */
-		/* NB: we possibly bind to the _very_ same_ address & port as the one
-		 * already bound in parent! This seems to work in Linux.
-		 * (otherwise we can move socket to fd #0 only if bind succeeds) */
-		close(0);
-		set_nport(localp, htons(local_port));
-		xmove_fd(xsocket(localp->sa.sa_family, SOCK_DGRAM, 0), 0);
-		setsockopt_reuseaddr(0); /* crucial */
-		xbind(0, &localp->sa, localp->len);
-#endif
 	}
 
 	pid = fork();

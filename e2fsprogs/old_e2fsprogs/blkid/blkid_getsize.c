@@ -85,7 +85,7 @@ blkid_loff_t blkid_get_dev_size(int fd)
 	struct stat st;
 #endif /* HAVE_SYS_DISKLABEL_H */
 
-#ifdef DKIOCGETBLOCKCOUNT	/* For Apple Darwin */
+#ifdef DKIOCGETBLOCKCOUNT	    /* For Apple Darwin */
 	if (ioctl(fd, DKIOCGETBLOCKCOUNT, &size64) >= 0) {
 		if ((sizeof(blkid_loff_t) < sizeof(unsigned long long))
 		    && (size64 << 9 > 0xFFFFFFFF))
@@ -120,20 +120,6 @@ blkid_loff_t blkid_get_dev_size(int fd)
 		return (blkid_loff_t)this_floppy.size << 9;
 #endif
 #ifdef HAVE_SYS_DISKLABEL_H
-#if 0
-	/*
-	 * This should work in theory but I haven't tested it.  Anyone
-	 * on a BSD system want to test this for me?  In the meantime,
-	 * binary search mechanism should work just fine.
-	 */
-	if ((fstat(fd, &st) >= 0) && S_ISBLK(st.st_mode))
-		part = st.st_rdev & 7;
-	if (part >= 0 && (ioctl(fd, DIOCGDINFO, (char *)&lab) >= 0)) {
-		pp = &lab.d_partitions[part];
-		if (pp->p_size)
-			return pp->p_size << 9;
-	}
-#endif
 #endif /* HAVE_SYS_DISKLABEL_H */
 
 	/*

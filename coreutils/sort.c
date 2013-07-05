@@ -99,7 +99,6 @@ static char *get_key(char *str, struct sort_key *key, int flags)
 		if (!j) start = end;
 	}
 	/* Strip leading whitespace if necessary */
-//XXX: skip_whitespace()
 	if (flags & FLAG_b)
 		while (isspace(str[start])) start++;
 	/* Strip trailing whitespace if necessary */

@@ -36,21 +36,6 @@ void clear_username_cache(void)
 	clear_cache(&groupname);
 }
 
-#if 0 /* more generic, but we don't need that yet */
-/* Returns -N-1 if not found. */
-/* cp->cache[N] is allocated and must be filled in this case */
-static int get_cached(cache_t *cp, unsigned id)
-{
-	int i;
-	for (i = 0; i < cp->size; i++)
-		if (cp->cache[i].id == id)
-			return i;
-	i = cp->size++;
-	cp->cache = xrealloc(cp->cache, cp->size * sizeof(*cp->cache));
-	cp->cache[i++].id = id;
-	return -i;
-}
-#endif
 
 typedef char* ug_func(char *name, int bufsize, long uid);
 static char* get_cached(cache_t *cp, unsigned id, ug_func* fp)
@@ -267,34 +252,6 @@ procps_status_t *procps_scan(procps_status_t* sp, int flags)
 
 		}
 
-#if 0 /* PSSCAN_CMD is not used */
-		if (flags & (PSSCAN_CMD|PSSCAN_ARGV0)) {
-			if (sp->argv0) {
-				free(sp->argv0);
-				sp->argv0 = NULL;
-			}
-			if (sp->cmd) {
-				free(sp->cmd);
-				sp->cmd = NULL;
-			}
-			strcpy(filename_tail, "/cmdline");
-			/* TODO: to get rid of size limits, read into malloc buf,
-			 * then realloc it down to real size. */
-			n = read_to_buf(filename, buf);
-			if (n <= 0)
-				break;
-			if (flags & PSSCAN_ARGV0)
-				sp->argv0 = xstrdup(buf);
-			if (flags & PSSCAN_CMD) {
-				do {
-					n--;
-					if ((unsigned char)(buf[n]) < ' ')
-						buf[n] = ' ';
-				} while (n);
-				sp->cmd = xstrdup(buf);
-			}
-		}
-#else
 		if (flags & PSSCAN_ARGV0) {
 			if (sp->argv0) {
 				free(sp->argv0);
@@ -307,7 +264,6 @@ procps_status_t *procps_scan(procps_status_t* sp, int flags)
 			if (flags & PSSCAN_ARGV0)
 				sp->argv0 = xstrdup(buf);
 		}
-#endif
 		break;
 	}
 	return sp;

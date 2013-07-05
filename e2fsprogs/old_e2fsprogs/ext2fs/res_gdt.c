@@ -130,17 +130,6 @@ errcode_t ext2fs_create_resize_inode(ext2_filsys fs)
 
 		gdt_off %= apb;
 		if (!dindir_buf[gdt_off]) {
-			/* FIXME XXX XXX
-			blk_t new_blk;
-
-			retval = ext2fs_new_block(fs, gdt_blk, 0, &new_blk);
-			if (retval)
-				goto out_free;
-			if (new_blk != gdt_blk) {
-				// XXX free block
-				retval = -1; // XXX
-			}
-			*/
 			gdt_dirty = dindir_dirty = inode_dirty = 1;
 			memset(gdt_buf, 0, fs->blocksize);
 			dindir_buf[gdt_off] = gdt_blk;
@@ -218,4 +207,3 @@ out_free:
 	ext2fs_free_mem((void *)&dindir_buf);
 	return retval;
 }
-

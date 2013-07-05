@@ -102,13 +102,6 @@ int bbunpack(char **argv,
 			}
 			xunlink(del);
 
-#if 0 /* Currently buggy - wrong name: "a.gz: 261% - replaced with a.gz" */
-			/* Extreme bloat for gunzip compat */
-			if (ENABLE_DESKTOP && (option_mask32 & OPT_VERBOSE) && status >= 0) {
-				fprintf(stderr, "%s: %u%% - replaced with %s\n",
-					filename, (unsigned)(stat_buf.st_size*100 / (status+1)), new_name);
-			}
-#endif
 
  free_name:
 			if (new_name != filename)

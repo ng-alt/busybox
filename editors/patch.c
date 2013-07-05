@@ -119,14 +119,12 @@ int patch_main(int argc, char **argv)
 			free(patch_line);
 			patch_line = xmalloc_getline(patch_file);
 		}
-		/* FIXME: patch_line NULL check?? */
 
 		/* Extract the filename used before the patch was generated */
 		original_filename = extract_filename(patch_line, patch_level);
 		free(patch_line);
 
 		patch_line = xmalloc_getline(patch_file);
-		/* FIXME: NULL check?? */
 		if (strncmp(patch_line, "+++ ", 4) != 0) {
 			ret = 2;
 			bb_error_msg("invalid patch");

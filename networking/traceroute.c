@@ -655,7 +655,6 @@ send_probe(int seq, int ttl)
 	}
 
 #if ENABLE_FEATURE_TRACEROUTE_VERBOSE
-	/* XXX undocumented debugging hack */
 	if (verbose > 1) {
 		const uint16_t *sp;
 		int nshorts, i;
@@ -754,14 +753,12 @@ packet_ok(unsigned char *buf, int cc, struct sockaddr_in *from, int seq)
 		if (useicmp) {
 			struct icmp *hicmp;
 
-			/* XXX */
 			if (type == ICMP_ECHOREPLY &&
 			    icp->icmp_id == htons(ident) &&
 			    icp->icmp_seq == htons(seq))
 				return -2;
 
 			hicmp = (struct icmp *)((unsigned char *)hip + hlen);
-			/* XXX 8 is a magic number */
 			if (hlen + 8 <= cc &&
 			    hip->ip_p == IPPROTO_ICMP &&
 			    hicmp->icmp_id == htons(ident) &&
@@ -771,7 +768,6 @@ packet_ok(unsigned char *buf, int cc, struct sockaddr_in *from, int seq)
 #endif
 		{
 			up = (struct udphdr *)((unsigned char *)hip + hlen);
-			/* XXX 8 is a magic number */
 			if (hlen + 12 <= cc &&
 			    hip->ip_p == IPPROTO_UDP &&
 			    up->source == htons(ident) &&
@@ -1009,7 +1005,7 @@ int traceroute_main(int argc, char **argv)
 
 #if ENABLE_FEATURE_TRACEROUTE_USE_ICMP
 	if (useicmp)
-		minpacket += 8;                 /* XXX magic number */
+		minpacket += 8;
 	else
 #endif
 		minpacket += sizeof(*outudp);
@@ -1130,7 +1126,7 @@ int traceroute_main(int argc, char **argv)
 		outicmp = (struct icmp *)outp;
 		outicmp->icmp_type = ICMP_ECHO;
 		outicmp->icmp_id = htons(ident);
-		outdata = (struct outdata *)(outp + 8); /* XXX magic number */
+		outdata = (struct outdata *)(outp + 8);
 	} else
 #endif
 	{

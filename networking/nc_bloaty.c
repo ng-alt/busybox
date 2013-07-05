@@ -148,11 +148,7 @@ enum {
 
 /* Debug: squirt whatever message and sleep a bit so we can see it go by. */
 /* Beware: writes to stdOUT... */
-#if 0
-#define Debug(...) do { printf(__VA_ARGS__); printf("\n"); fflush(stdout); sleep(1); } while (0)
-#else
 #define Debug(...) do { } while (0)
-#endif
 
 #define holler_error(...)  do { if (o_verbose) bb_error_msg(__VA_ARGS__); } while (0)
 #define holler_perror(...) do { if (o_verbose) bb_perror_msg(__VA_ARGS__); } while (0)
@@ -484,7 +480,7 @@ static void oprint(int direction, unsigned char *p, unsigned bc)
 			memset(&stage[11], ' ', 16*3);
 			x = bc;
 		}
-		sprintf(&stage[1], " %8.8x ", obc);  /* xxx: still slow? */
+		sprintf(&stage[1], " %8.8x ", obc);
 		bc -= x;          /* fix current count */
 		obc += x;         /* fix current offset */
 		op = &stage[11];  /* where hex starts */
@@ -568,8 +564,6 @@ static int readwrite(void)
 				return 0;                        /* not an error! */
 			}
 		} /* select timeout */
-	/* xxx: should we check the exception fds too?  The read fds seem to give
-	 us the right info, and none of the examples I found bothered. */
 
 	/* Ding!!  Something arrived, go check all the incoming hoppers, net first */
 		if (FD_ISSET(netfd, &ding2)) {                /* net: ding! */
@@ -658,11 +652,6 @@ Debug("wrote %d to net, errno %d", rr, errno);
 		}
 	} /* while ding1:netfd is open */
 
-	/* XXX: maybe want a more graceful shutdown() here, or screw around with
-	 linger times??  I suspect that I don't need to since I'm always doing
-	 blocking reads and writes and my own manual "last ditch" efforts to read
-	 the net again after a timeout.  I haven't seen any screwups yet, but it's
-	 not like my test network is particularly busy... */
 	close(netfd);
 	return 0;
 } /* readwrite */
@@ -761,10 +750,6 @@ int nc_main(int argc, char **argv)
 	if (o_udpmode)
 		socket_want_pktinfo(netfd);
 	xbind(netfd, &ouraddr->sa, ouraddr->len);
-#if 0
-	setsockopt(netfd, SOL_SOCKET, SO_RCVBUF, &o_rcvbuf, sizeof o_rcvbuf);
-	setsockopt(netfd, SOL_SOCKET, SO_SNDBUF, &o_sndbuf, sizeof o_sndbuf);
-#endif
 
 	if (OPT_l && (option_mask32 & (OPT_u|OPT_l)) == (OPT_u|OPT_l)) {
 		/* apparently UDP can listen ON "port 0",

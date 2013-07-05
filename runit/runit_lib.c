@@ -160,7 +160,6 @@ void taia_sub(struct taia *t, const struct taia *u, const struct taia *v)
 	}
 }
 
-/* XXX: breaks tai encapsulation */
 void taia_uint(struct taia *t, unsigned s)
 {
 	t->sec.x = s;
@@ -195,9 +194,6 @@ void iopause(iopause_fd *x, unsigned len, struct taia *deadline, struct taia *st
 		x[i].revents = 0;
 
 	poll(x, len, millisecs);
-	/* XXX: some kernels apparently need x[0] even if len is 0 */
-	/* XXX: how to handle EAGAIN? are kernels really this dumb? */
-	/* XXX: how to handle EINVAL? when exactly can this happen? */
 }
 #endif
 

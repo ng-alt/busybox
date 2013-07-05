@@ -84,34 +84,3 @@ speed_t tty_value_to_baud(unsigned int value)
 
 	return (speed_t) - 1;
 }
-
-#if 0
-/* testing code */
-#include <stdio.h>
-
-int main(void)
-{
-	unsigned long v;
-	speed_t s;
-
-	for (v = 0 ; v < 500000; v++) {
-		s = tty_value_to_baud(v);
-		if (s == (speed_t) -1) {
-			continue;
-		}
-		printf("v = %lu -- s = %0lo\n", v, (unsigned long) s);
-	}
-
-	printf("-------------------------------\n");
-
-	for (s = 0 ; s < 010017+1; s++) {
-		v = tty_baud_to_value(s);
-		if (!v) {
-			continue;
-		}
-		printf("v = %lu -- s = %0lo\n", v, (unsigned long) s);
-	}
-
-	return 0;
-}
-#endif

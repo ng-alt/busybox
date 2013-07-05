@@ -41,7 +41,6 @@ int update_passwd(const char *filename, const char *username,
 	/* Try to create "/etc/passwd+". Wait if it exists. */
 	i = 30;
 	do {
-		// FIXME: on last iteration try w/o O_EXCL but with O_TRUNC?
 		new_fd = open(fnamesfx, O_WRONLY|O_CREAT|O_EXCL, 0600);
 		if (new_fd >= 0) goto created;
 		if (errno != EEXIST) break;

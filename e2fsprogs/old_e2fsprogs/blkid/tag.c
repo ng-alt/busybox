@@ -288,15 +288,6 @@ void blkid_tag_iterate_end(blkid_tag_iterate iter)
 	free(iter);
 }
 
-/*
- * This function returns a device which matches a particular
- * type/value pair.  If there is more than one device that matches the
- * search specification, it returns the one with the highest priority
- * value.  This allows us to give preference to EVMS or LVM devices.
- *
- * XXX there should also be an interface which uses an iterator so we
- * can get all of the devices which match a type/value search parameter.
- */
 extern blkid_dev blkid_find_dev_with_tag(blkid_cache cache,
 					 const char *type,
 					 const char *value)

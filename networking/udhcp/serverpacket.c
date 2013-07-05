@@ -135,7 +135,7 @@ int sendOffer(struct dhcpMessage *oldpacket)
 			/* or its taken, but expired */ /* ADDME: or maybe in here */
 			|| lease_expired(lease))
 		) {
-			packet.yiaddr = req_align; /* FIXME: oh my, is there a host using this IP? */
+			packet.yiaddr = req_align;
 			/* otherwise, find a free IP */
 		} else {
 			/* Is it a static lease? (No, because find_address skips static lease) */

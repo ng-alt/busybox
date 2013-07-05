@@ -159,7 +159,6 @@ static int get_wol_pw(const char *ethoptarg, unsigned char *wol_passwd)
 	                  &passwd[0], &passwd[1], &passwd[2],
 	                  &passwd[3], &passwd[4], &passwd[5]);
 	/* handle IP format */
-// FIXME: why < 4?? should it be < 6?
 	if (byte_cnt < 4)
 		byte_cnt = sscanf(ethoptarg, "%u.%u.%u.%u",
 		                  &passwd[0], &passwd[1], &passwd[2], &passwd[3]);

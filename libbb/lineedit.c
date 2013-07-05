@@ -31,7 +31,6 @@
 #include "libbb.h"
 
 
-/* FIXME: obsolete CONFIG item? */
 #define ENABLE_FEATURE_NONPRINTABLE_INVERSE_PUT 0
 
 
@@ -1270,7 +1269,6 @@ int read_line_input(const char* prompt, char* command, int maxsize, line_input_t
 	smalluint prevc;
 #endif
 
-// FIXME: audit & improve this
 	if (maxsize > MAX_LINELEN)
 		maxsize = MAX_LINELEN;
 

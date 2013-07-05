@@ -61,7 +61,6 @@ static void cut_file(FILE * file)
 		unsigned int cl_pos = 0;
 		int spos;
 
-		/* cut based on chars/bytes XXX: only works when sizeof(char) == byte */
 		if (option_mask32 & (CUT_OPT_CHAR_FLGS | CUT_OPT_BYTE_FLGS)) {
 			/* print the chars specified in each cut list */
 			for (; cl_pos < nlists; cl_pos++) {

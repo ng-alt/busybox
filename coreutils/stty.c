@@ -75,13 +75,13 @@
 # define CSWTCH _POSIX_VDISABLE
 #endif
 
-#if defined(VWERSE) && !defined(VWERASE)       /* AIX-3.2.5 */
+#if defined(VWERSE) && !defined(VWERASE)           /* AIX-3.2.5 */
 # define VWERASE VWERSE
 #endif
 #if defined(VDSUSP) && !defined(CDSUSP)
 # define CDSUSP Control('y')
 #endif
-#if !defined(VREPRINT) && defined(VRPRNT)       /* Irix 4.0.5 */
+#if !defined(VREPRINT) && defined(VRPRNT)           /* Irix 4.0.5 */
 # define VREPRINT VRPRNT
 #endif
 #if defined(VREPRINT) && !defined(CRPRNT)
@@ -96,16 +96,16 @@
 #if defined(VDISCARD) && !defined(VFLUSHO)
 # define VFLUSHO VDISCARD
 #endif
-#if defined(VFLUSH) && !defined(VFLUSHO)        /* Ultrix 4.2 */
+#if defined(VFLUSH) && !defined(VFLUSHO)            /* Ultrix 4.2 */
 # define VFLUSHO VFLUSH
 #endif
-#if defined(CTLECH) && !defined(ECHOCTL)        /* Ultrix 4.3 */
+#if defined(CTLECH) && !defined(ECHOCTL)            /* Ultrix 4.3 */
 # define ECHOCTL CTLECH
 #endif
-#if defined(TCTLECH) && !defined(ECHOCTL)       /* Ultrix 4.2 */
+#if defined(TCTLECH) && !defined(ECHOCTL)           /* Ultrix 4.2 */
 # define ECHOCTL TCTLECH
 #endif
-#if defined(CRTKIL) && !defined(ECHOKE)         /* Ultrix 4.2 and 4.3 */
+#if defined(CRTKIL) && !defined(ECHOKE)             /* Ultrix 4.2 and 4.3 */
 # define ECHOKE CRTKIL
 #endif
 #if defined(VFLUSHO) && !defined(CFLUSHO)

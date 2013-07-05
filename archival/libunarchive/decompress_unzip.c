@@ -148,7 +148,7 @@ typedef struct state_t {
 
 
 /* This is generic part */
-#if STATE_IN_BSS /* Use global data segment */
+#if STATE_IN_BSS     /* Use global data segment */
 #define DECLARE_STATE /*nothing*/
 #define ALLOC_STATE (init_state())
 #define DEALLOC_STATE ((void)0)
@@ -164,7 +164,7 @@ static void init_state(void)
 }
 #endif
 
-#if STATE_IN_MALLOC /* Use malloc space */
+#if STATE_IN_MALLOC     /* Use malloc space */
 #define DECLARE_STATE state_t *state
 #define ALLOC_STATE (state = alloc_state())
 #define DEALLOC_STATE free(state)

@@ -406,14 +406,6 @@ errcode_t ext2fs_get_next_inode_full(ext2_inode_scan scan, ext2_ino_t *ino,
 		retval = get_next_blocks(scan);
 		if (retval)
 			return retval;
-#if 0
-		/*
-		 * XXX test  Need check for used inode somehow.
-		 * (Note: this is hard.)
-		 */
-		if (is_empty_scan(scan))
-			goto force_new_group;
-#endif
 	}
 
 	retval = 0;
@@ -764,4 +756,3 @@ errcode_t ext2fs_check_directory(ext2_filsys fs, ext2_ino_t ino)
 		return EXT2_ET_NO_DIRECTORY;
 	return 0;
 }
-

@@ -1,15 +1,4 @@
 /* vi: set sw=4 ts=4: */
-/* Licensed under GPLv2 or later, see file LICENSE in this tarball for details.
- *
- *  FIXME:
- *    In privileged mode if uname and gname map to a uid and gid then use the
- *    mapped value instead of the uid/gid values in tar header
- *
- *  References:
- *    GNU tar and star man pages,
- *    Opengroup's ustar interchange format,
- *	http://www.opengroup.org/onlinepubs/007904975/utilities/pax.html
- */
 
 #include "libbb.h"
 #include "unarchive.h"
@@ -165,7 +154,6 @@ char get_header_tar(archive_handle_t *archive_handle)
 		/* we trash magic[0] here, it's ok */
 		tar.linkname[sizeof(tar.linkname)] = '\0';
 		file_header->link_target = xstrdup(tar.linkname);
-		/* FIXME: what if we have non-link object with link_target? */
 		/* Will link_target be free()ed? */
 	}
 	file_header->mtime = GET_OCTAL(tar.mtime);

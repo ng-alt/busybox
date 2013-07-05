@@ -225,55 +225,6 @@ static const char *const i386_sys_types[] = {
 	"\xfd" "Linux raid autodetect",      /* New (2.2.x) raid partition with
 						autodetect using persistent
 						superblock */
-#if 0 /* ENABLE_WEIRD_PARTITION_TYPES */
-	"\x02" "XENIX root",
-	"\x03" "XENIX usr",
-	"\x08" "AIX",              /* AIX boot (AIX -- PS/2 port) or SplitDrive */
-	"\x09" "AIX bootable",     /* AIX data or Coherent */
-	"\x10" "OPUS",
-	"\x18" "AST SmartSleep",
-	"\x24" "NEC DOS",
-	"\x39" "Plan 9",
-	"\x40" "Venix 80286",
-	"\x4d" "QNX4.x",
-	"\x4e" "QNX4.x 2nd part",
-	"\x4f" "QNX4.x 3rd part",
-	"\x50" "OnTrack DM",
-	"\x51" "OnTrack DM6 Aux1", /* (or Novell) */
-	"\x52" "CP/M",             /* CP/M or Microport SysV/AT */
-	"\x53" "OnTrack DM6 Aux3",
-	"\x54" "OnTrackDM6",
-	"\x55" "EZ-Drive",
-	"\x56" "Golden Bow",
-	"\x5c" "Priam Edisk",
-	"\x61" "SpeedStor",
-	"\x64" "Novell Netware 286",
-	"\x65" "Novell Netware 386",
-	"\x70" "DiskSecure Multi-Boot",
-	"\x75" "PC/IX",
-	"\x93" "Amoeba",
-	"\x94" "Amoeba BBT",       /* (bad block table) */
-	"\xa7" "NeXTSTEP",
-	"\xbb" "Boot Wizard hidden",
-	"\xc1" "DRDOS/sec (FAT-12)",
-	"\xc4" "DRDOS/sec (FAT-16 < 32M)",
-	"\xc6" "DRDOS/sec (FAT-16)",
-	"\xc7" "Syrinx",
-	"\xda" "Non-FS data",
-	"\xdb" "CP/M / CTOS / ...",/* CP/M or Concurrent CP/M or
-	                              Concurrent DOS or CTOS */
-	"\xde" "Dell Utility",     /* Dell PowerEdge Server utilities */
-	"\xdf" "BootIt",           /* BootIt EMBRM */
-	"\xe1" "DOS access",       /* DOS access or SpeedStor 12-bit FAT
-	                              extended partition */
-	"\xe3" "DOS R/O",          /* DOS R/O or SpeedStor */
-	"\xe4" "SpeedStor",        /* SpeedStor 16-bit FAT extended
-	                              partition < 1024 cyl. */
-	"\xf1" "SpeedStor",
-	"\xf4" "SpeedStor",        /* SpeedStor large partition */
-	"\xfe" "LANstep",          /* SpeedStor >1024 cyl. or LANstep */
-	"\xff" "BBT",              /* Xenix Bad Block Table */
-#endif
 	NULL
 };
 
@@ -2033,7 +1984,6 @@ list_table(int xtra)
 	/* partition table entries are not checked for correct order if this
 	   is a sgi, sun or aix labeled disk... */
 	if (LABEL_IS_DOS && wrong_p_order(NULL)) {
-		/* FIXME */
 		printf("\nPartition table entries are not in disk order\n");
 	}
 }
@@ -2445,13 +2395,6 @@ reread_partition_table(int leave)
 	i = ioctl_or_perror(fd, BLKRRPART, NULL,
 			"WARNING: rereading partition table "
 			"failed, kernel still uses old table");
-#if 0
-	if (dos_changed)
-		printf(
-		"\nWARNING: If you have created or modified any DOS 6.x\n"
-		"partitions, please see the fdisk manual page for additional\n"
-		"information\n");
-#endif
 
 	if (leave) {
 		if (ENABLE_FEATURE_CLEAN_UP)

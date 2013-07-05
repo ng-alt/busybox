@@ -475,7 +475,6 @@ static enum token t_lex(char *s)
 }
 
 /* atoi with error detection */
-//XXX: FIXME: duplicate of existing libbb function?
 static arith_t getn(const char *s)
 {
 	char *p;
@@ -565,8 +564,6 @@ static void initialize_group_array(void)
 {
 	ngroups = getgroups(0, NULL);
 	if (ngroups > 0) {
-		/* FIXME: ash tries so hard to not die on OOM,
-		 * and we spoil it with just one xrealloc here */
 		/* We realloc, because test_main can be entered repeatedly by shell.
 		 * Testcase (ash): 'while true; do test -x some_file; done'
 		 * and watch top. (some_file must have owner != you) */
@@ -576,7 +573,6 @@ static void initialize_group_array(void)
 }
 
 /* Return non-zero if GID is one that we have in our groups list. */
-//XXX: FIXME: duplicate of existing libbb function?
 // see toplevel TODO file:
 // possible code duplication ingroup() and is_a_group_member()
 static int is_a_group_member(gid_t gid)

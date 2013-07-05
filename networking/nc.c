@@ -66,11 +66,6 @@ int nc_main(int argc, char **argv)
 						*p++ = argv[optind++];
 					}
 				)
-				/* optind points to argv[arvc] (NULL) now.
-				** FIXME: we assume that getopt will not count options
-				** possibly present on "-e prog args" and will not
-				** include them into final value of optind
-				** which is to be used ...  */
 			} else bb_show_usage();
 		}
 		argv += optind; /* ... here! */

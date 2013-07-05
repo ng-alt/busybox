@@ -17,8 +17,6 @@
 #if ENABLE_PAM
 /* PAM may include <locale.h>. We may need to undefine bbox's stub define: */
 #undef setlocale
-/* For some obscure reason, PAM is not in pam/xxx, but in security/xxx.
- * Apparently they like to confuse people. */
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 static const struct pam_conv conv = {
@@ -434,7 +432,6 @@ int login_main(int argc, char **argv)
 		tmp = DEFAULT_SHELL;
 	/* setup_environment params: shell, loginshell, changeenv, pw */
 	setup_environment(tmp, 1, !(opt & LOGIN_OPT_p), pw);
-	/* FIXME: login shell = 1 -> 3rd parameter is ignored! */
 
 	motd();
 

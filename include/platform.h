@@ -162,17 +162,15 @@ __extension__ typedef unsigned long long __u64;
 
 /* ---- miscellaneous --------------------------------------- */
 
-#if defined(__GNU_LIBRARY__) && __GNU_LIBRARY__ < 5 && \
-	!defined(__dietlibc__) && \
-	!defined(_NEWLIB_VERSION) && \
-	!(defined __digital__ && defined __unix__)
+#if defined(__GNU_LIBRARY__) && __GNU_LIBRARY__ < 5 && !defined(__dietlibc__) && \
+	!defined(_NEWLIB_VERSION) && !(defined __digital__ && defined __unix__)
 # error "Sorry, this libc version is not supported :("
 #endif
 
 /* Don't perpetuate e2fsck crap into the headers.  Clean up e2fsck instead. */
 
-#if defined __GLIBC__ || defined __UCLIBC__ \
-	|| defined __dietlibc__ || defined _NEWLIB_VERSION
+#if defined __GLIBC__ || defined __UCLIBC__ || defined __dietlibc__ || defined \
+	_NEWLIB_VERSION
 #include <features.h>
 #define HAVE_FEATURES_H
 #include <stdint.h>
@@ -211,14 +209,8 @@ typedef unsigned smalluint;
 #endif
 
 /* Try to defeat gcc's alignment of "char message[]"-like data */
-#if 1 /* if needed: !defined(arch1) && !defined(arch2) */
 #define ALIGN1 __attribute__((aligned(1)))
 #define ALIGN2 __attribute__((aligned(2)))
-#else
-/* Arches which MUST have 2 or 4 byte alignment for everything are here */
-#define ALIGN1
-#define ALIGN2
-#endif
 
 
 /* uclibc does not implement daemon() for no-mmu systems.
@@ -228,7 +220,7 @@ typedef unsigned smalluint;
  * on his own.
  */
 #if defined __UCLIBC__ && __UCLIBC_MAJOR__ >= 0 && __UCLIBC_MINOR__ >= 9 && \
-    __UCLIBC_SUBLEVEL__ > 28 && !defined __ARCH_USE_MMU__
+	__UCLIBC_SUBLEVEL__ > 28 && !defined __ARCH_USE_MMU__
 #define BB_MMU 0
 #define BB_NOMMU 1
 #define USE_FOR_NOMMU(...) __VA_ARGS__
@@ -259,13 +251,11 @@ static ALWAYS_INLINE char* strchrnul(const char *s, char c)
 #endif
 
 /* Don't use lchown with glibc older than 2.1.x ... uClibc lacks it */
-#if (defined __GLIBC__ && __GLIBC__ <= 2 && __GLIBC_MINOR__ < 1) || \
-    defined __UC_LIBC__
+#if (defined __GLIBC__ && __GLIBC__ <= 2 && __GLIBC_MINOR__ < 1) || defined __UC_LIBC__
 # define lchown chown
 #endif
 
 /* THIS SHOULD BE CLEANED OUT OF THE TREE ENTIRELY */
-/* FIXME: fix tar.c! */
 #ifndef FNM_LEADING_DIR
 #define FNM_LEADING_DIR 0
 #endif

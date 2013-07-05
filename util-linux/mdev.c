@@ -239,10 +239,6 @@ static void load_firmware(const char *const firmware, const char *const sysfs_pa
 	int firmware_fd, loading_fd, data_fd;
 
 	/* check for $FIRMWARE from kernel */
-	/* XXX: dont bother: open(NULL) works same as open("no-such-file")
-	 * if (!firmware)
-	 *	return;
-	 */
 
 	/* check for /lib/firmware/$FIRMWARE */
 	xchdir("/lib/firmware");

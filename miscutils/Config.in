@@ -385,5 +385,13 @@ config WATCHDOG
 	  certain amount of time, the watchdog device assumes the system has
 	  hung, and will cause the hardware to reboot.
 
+config FLASH_ERASEALL
+	bool "flash_eraseall"
+	default n
+	help
+	  The flash_eraseall binary from mtd-utils as of git head c4c6a59eb.
+	  This utility is used to erase the whole MTD partition or device,
+	  and initialoze a JFFS2 volume on a partition with the -j option.
+
 endmenu
 

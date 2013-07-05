@@ -419,18 +419,12 @@ static errcode_t unix_open(const char *name, int flags, io_channel *channel)
 
 #ifdef __linux__
 #undef RLIM_INFINITY
-#if (defined(__alpha__) || ((defined(__sparc__) || defined(__mips__)) && (SIZEOF_LONG == 4)))
+#if (defined(__alpha__) || ((defined(__sparc__) || defined(__mips__)) && (SIZEOF_LONG \
+	== 4)))
 #define RLIM_INFINITY	((unsigned long)(~0UL>>1))
 #else
 #define RLIM_INFINITY  (~0UL)
 #endif
-	/*
-	 * Work around a bug in 2.4.10-2.4.18 kernels where writes to
-	 * block devices are wrongly getting hit by the filesize
-	 * limit.  This workaround isn't perfect, since it won't work
-	 * if glibc wasn't built against 2.2 header files.  (Sigh.)
-	 *
-	 */
 	if ((flags & IO_FLAG_RW) &&
 	    (uname(&ut) == 0) &&
 	    ((ut.release[0] == '2') && (ut.release[1] == '.') &&

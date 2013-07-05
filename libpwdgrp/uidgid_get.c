@@ -110,24 +110,3 @@ void parse_chown_usergroup_or_die(struct bb_uidgid_t *u, char *user_group)
 			bb_error_msg_and_die("unknown user/group %s", user_group);
 	}
 }
-
-#if 0
-#include <stdio.h>
-int main()
-{
-	unsigned u;
-	struct bb_uidgid_t ug;
-	u = get_uidgid(&ug, "apache", 0);
-	printf("%u = %u:%u\n", u, ug.uid, ug.gid);
-	ug.uid = ug.gid = 1111;
-	u = get_uidgid(&ug, "apache", 0);
-	printf("%u = %u:%u\n", u, ug.uid, ug.gid);
-	ug.uid = ug.gid = 1111;
-	u = get_uidgid(&ug, "apache:users", 0);
-	printf("%u = %u:%u\n", u, ug.uid, ug.gid);
-	ug.uid = ug.gid = 1111;
-	u = get_uidgid(&ug, "apache:users", 0);
-	printf("%u = %u:%u\n", u, ug.uid, ug.gid);
-	return 0;
-}
-#endif

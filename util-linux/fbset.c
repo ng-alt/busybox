@@ -195,7 +195,6 @@ static int readmode(struct fb_var_screeninfo *base, const char *fn,
 			fgets(buf, sizeof(buf), f);
 			if ((p = strstr(buf, "geometry "))) {
 				p += 9;
-				/* FIXME: catastrophic on arches with 64bit ints */
 				sscanf(p, "%d %d %d %d %d",
 					&(base->xres), &(base->yres),
 					&(base->xres_virtual), &(base->yres_virtual),

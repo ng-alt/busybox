@@ -245,7 +245,6 @@ of a basic regular expression is not portable; it is being ignored", pv->u.s);
 		else
 			v = int_value(0);
 	}
-//FIXME: sounds like here is a bit missing: regfree(&re_buffer);
 	return v;
 }
 

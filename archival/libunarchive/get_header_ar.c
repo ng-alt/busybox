@@ -49,7 +49,6 @@ char get_header_ar(archive_handle_t *archive_handle)
 	if (ar.formatted.magic[0] != '`' || ar.formatted.magic[1] != '\n')
 		bb_error_msg_and_die("invalid ar header");
 
-	/* FIXME: more thorough routine would be in order here */
 	/* (we have something like that in tar) */
 	/* but for now we are lax. This code works because */
 	/* on misformatted numbers bb_strtou returns all-ones */

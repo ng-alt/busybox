@@ -290,7 +290,8 @@ static void end_cmd_q(void);	// stop saving input chars
 #if ENABLE_FEATURE_VI_SETOPTS
 static void showmatching(char *);	// show the matching pair ()  []  {}
 #endif
-#if ENABLE_FEATURE_VI_YANKMARK || (ENABLE_FEATURE_VI_COLON && ENABLE_FEATURE_VI_SEARCH) || ENABLE_FEATURE_VI_CRASHME
+#if ENABLE_FEATURE_VI_YANKMARK || (ENABLE_FEATURE_VI_COLON && ENABLE_FEATURE_VI_SEARCH) \
+	|| ENABLE_FEATURE_VI_CRASHME
 static char *string_insert(char *, char *);	// insert the string at 'p'
 #endif
 #if ENABLE_FEATURE_VI_YANKMARK
@@ -1975,9 +1976,8 @@ static void end_cmd_q(void)
 }
 #endif /* FEATURE_VI_DOT_CMD */
 
-#if ENABLE_FEATURE_VI_YANKMARK \
- || (ENABLE_FEATURE_VI_COLON && ENABLE_FEATURE_VI_SEARCH) \
- || ENABLE_FEATURE_VI_CRASHME
+#if ENABLE_FEATURE_VI_YANKMARK || (ENABLE_FEATURE_VI_COLON && ENABLE_FEATURE_VI_SEARCH) \
+	|| ENABLE_FEATURE_VI_CRASHME
 static char *string_insert(char * p, char * s) // insert the string at 'p'
 {
 	int cnt, i;
@@ -3009,7 +3009,6 @@ static void do_cmd(char c)
 		//case '_':	// _-
 		//case '`':	// `-
 		//case 'g':	// g-
-		//case 'u':	// u- FIXME- there is no undo
 		//case 'v':	// v-
 	default:			// unrecognised command
 		buf[0] = c;

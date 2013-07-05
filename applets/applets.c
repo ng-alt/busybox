@@ -117,7 +117,6 @@ static const char config_file[] ALIGN1 = "/etc/busybox.conf";
  * necessary below.  Also, we use unsigned short here to save some
  * space even though these are really mode_t values. */
 static const unsigned short mode_mask[] ALIGN2 = {
-	/*  SST     sst                 xxx         --- */
 	S_ISUID,    S_ISUID|S_IXUSR,    S_IXUSR,    0,	/* user */
 	S_ISGID,    S_ISGID|S_IXGRP,    S_IXGRP,    0,	/* group */
 	0,          S_IXOTH,            S_IXOTH,    0	/* other */

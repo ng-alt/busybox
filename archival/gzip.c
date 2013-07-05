@@ -2036,7 +2036,7 @@ int gzip_main(int argc, char **argv)
 	//if (opt & 0x1) // -c
 	//if (opt & 0x2) // -f
 	//if (opt & 0x4) // -v
-#if ENABLE_GUNZIP /* gunzip_main may not be visible... */
+#if ENABLE_GUNZIP     /* gunzip_main may not be visible... */
 	if (opt & 0x8) { // -d
 		return gunzip_main(argc, argv);
 	}

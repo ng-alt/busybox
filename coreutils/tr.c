@@ -49,7 +49,7 @@ static void map(char *pvector,
 static unsigned int expand(const char *arg, char *buffer)
 {
 	char *buffer_start = buffer;
-	unsigned i; /* XXX: FIXME: use unsigned char? */
+	unsigned i;
 	unsigned char ac;
 #define CLO ":]\0"
 	static const char classes[] ALIGN1 =

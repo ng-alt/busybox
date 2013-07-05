@@ -25,7 +25,7 @@
 
 enum {
 	MAX_HOST_LEN = 16,      // longest host name allowed is 15
-	IP_STRING_LEN = 18,     // .xxx.xxx.xxx.xxx\0
+	IP_STRING_LEN = 18,
 
 //must be strlen('.in-addr.arpa') larger than IP_STRING_LEN
 	MAX_NAME_LEN = (IP_STRING_LEN + 13),
@@ -380,7 +380,6 @@ int dnsd_main(int argc, char **argv)
 	while (1) {
 		int r;
 		socklen_t fromlen = lsa->len;
-// FIXME: need to get *DEST* address (to which of our addresses
 // this query was directed), and reply from the same address.
 // Or else we can exhibit usual UDP ugliness:
 // [ip1.multihomed.ip2] <=  query to ip1  <= peer

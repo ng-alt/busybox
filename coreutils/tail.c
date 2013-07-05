@@ -99,11 +99,6 @@ int tail_main(int argc, char **argv)
 	) {
 		/* replacing arg[0] with "-n" can segfault, so... */
 		argv[1] = xasprintf("-n%s", argv[1]);
-#if 0 /* If we ever decide to make tail NOFORK */
-		char *s = alloca(strlen(argv[1]) + 3);
-		sprintf(s, "-n%s", argv[1]);
-		argv[1] = s;
-#endif
 	}
 #endif
 

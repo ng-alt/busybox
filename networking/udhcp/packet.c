@@ -1,7 +1,8 @@
 /* vi: set sw=4 ts=4: */
 
 #include <netinet/in.h>
-#if (defined(__GLIBC__) && __GLIBC__ >= 2 && __GLIBC_MINOR__ >= 1) || defined _NEWLIB_VERSION
+#if (defined(__GLIBC__) && __GLIBC__ >= 2 && __GLIBC_MINOR__ >= 1) || defined \
+	_NEWLIB_VERSION
 #include <netpacket/packet.h>
 #include <net/ethernet.h>
 #else
@@ -41,12 +42,6 @@ void udhcp_init_header(struct dhcpMessage *packet, char type)
 /* read a packet from socket fd, return -1 on read error, -2 on packet error */
 int udhcp_get_packet(struct dhcpMessage *packet, int fd)
 {
-#if 0
-	static const char broken_vendors[][8] = {
-		"MSFT 98",
-		""
-	};
-#endif
 	int bytes;
 	unsigned char *vendor;
 
@@ -66,25 +61,12 @@ int udhcp_get_packet(struct dhcpMessage *packet, int fd)
 	if (packet->op == BOOTREQUEST) {
 		vendor = get_option(packet, DHCP_VENDOR);
 		if (vendor) {
-#if 0
-			int i;
-			for (i = 0; broken_vendors[i][0]; i++) {
-				if (vendor[OPT_LEN - 2] == (uint8_t)strlen(broken_vendors[i])
-				 && !strncmp((char*)vendor, broken_vendors[i], vendor[OPT_LEN - 2])
-				) {
-					DEBUG("broken client (%s), forcing broadcast",
-						broken_vendors[i]);
-					packet->flags |= htons(BROADCAST_FLAG);
-				}
-			}
-#else
 			if (vendor[OPT_LEN - 2] == (uint8_t)(sizeof("MSFT 98")-1)
 			 && memcmp(vendor, "MSFT 98", sizeof("MSFT 98")-1) == 0
 			) {
 				DEBUG("broken client (%s), forcing broadcast", "MSFT 98");
 				packet->flags |= htons(BROADCAST_FLAG);
 			}
-#endif
 		}
 	}
 

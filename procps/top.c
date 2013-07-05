@@ -306,9 +306,6 @@ static unsigned long display_generic(int scr_width)
 	printf(OPT_BATCH_MODE ? "%s\n" : "\e[H\e[J%s\n", scrbuf);
 
 #if ENABLE_FEATURE_TOP_CPU_GLOBAL_PERCENTS
-	/*
-	 * xxx% = (jif.xxx - prev_jif.xxx) / (jif.total - prev_jif.total) * 100%
-	 */
 	/* using (unsigned) casts to make operations cheaper */
 	total_diff = ((unsigned)(jif.total - prev_jif.total) ? : 1);
 #if ENABLE_FEATURE_TOP_DECIMALS
@@ -418,10 +415,6 @@ static void display_status(int count, int scr_width)
 	/*
 	 * CPU% = s->pcpu/sum(s->pcpu) * busy_cpu_ticks/total_cpu_ticks
 	 * (pcpu is delta of sys+user time between samples)
-	 */
-	/* (jif.xxx - prev_jif.xxx) and s->pcpu are
-	 * in 0..~64000 range (HZ*update_interval).
-	 * we assume that unsigned is at least 32-bit.
 	 */
 	pcpu_shift = 6;
 	pcpu_scale = (UPSCALE*64*(uint16_t)busy_jifs ? : 1);

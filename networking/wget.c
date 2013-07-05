@@ -295,7 +295,6 @@ int wget_main(int argc, char **argv)
 			str = buf;
 			str = skip_non_whitespace(str);
 			str = skip_whitespace(str);
-			// FIXME: no error check
 			// xatou wouldn't work: "200 OK"
 			status = atoi(str);
 			switch (status) {
@@ -446,7 +445,6 @@ int wget_main(int argc, char **argv)
 	if (chunked) {
 		fgets(buf, sizeof(buf), dfp);
 		content_len = STRTOOFF(buf, NULL, 16);
-		/* FIXME: error check?? */
 	}
 
 	/* Do it before progressmeter (want to have nice error message) */
@@ -480,7 +478,6 @@ int wget_main(int argc, char **argv)
 			safe_fgets(buf, sizeof(buf), dfp); /* This is a newline */
 			safe_fgets(buf, sizeof(buf), dfp);
 			content_len = STRTOOFF(buf, NULL, 16);
-			/* FIXME: error check? */
 			if (content_len == 0) {
 				chunked = 0; /* all done! */
 			}
@@ -734,7 +731,6 @@ progressmeter(int flag)
 	fprintf(stderr, "%6d%c ", (int)abbrevsize, " kMGTPEZY"[i]);
 
 // Nuts! Ain't it easier to update progress meter ONLY when we transferred++?
-// FIXME: get rid of alarmtimer + updateprogressmeter mess
 
 	elapsed = monotonic_sec();
 	since_last_update = elapsed - lastupdate_sec;

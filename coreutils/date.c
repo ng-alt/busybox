@@ -76,7 +76,6 @@ int date_main(int argc, char **argv)
 		}
 	}
 
-	/* XXX, date_fmt == NULL from this always */
 	if ((date_fmt == NULL) && (optind < argc) && (argv[optind][0] == '+')) {
 		date_fmt = &argv[optind][1];	/* Skip over the '+' */
 	} else if (date_str == NULL) {

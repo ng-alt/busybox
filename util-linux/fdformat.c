@@ -111,7 +111,6 @@ int fdformat_main(int argc,char **argv)
 				}
 				bb_error_msg_and_die("problem reading cylinder %d, "
 					"expected %d, read %d", cyl, n, read_bytes);
-				// FIXME: maybe better seek & continue??
 			}
 			/* Check backwards so we don't need a counter */
 			while (--read_bytes >= 0) {

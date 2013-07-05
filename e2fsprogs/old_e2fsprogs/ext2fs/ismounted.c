@@ -57,7 +57,7 @@ static errcode_t check_mntent_file(const char *mtab_file, const char *file,
 		return errno;
 	if (stat(file, &st_buf) == 0) {
 		if (S_ISBLK(st_buf.st_mode)) {
-#ifndef __GNU__ /* The GNU hurd is broken with respect to stat devices */
+#ifndef __GNU__     /* The GNU hurd is broken with respect to stat devices */
 			file_rdev = st_buf.st_rdev;
 #endif	/* __GNU__ */
 		} else {
@@ -83,7 +83,7 @@ static errcode_t check_mntent_file(const char *mtab_file, const char *file,
 	}
 
 	if (mnt == 0) {
-#ifndef __GNU__ /* The GNU hurd is broken with respect to stat devices */
+#ifndef __GNU__     /* The GNU hurd is broken with respect to stat devices */
 		/*
 		 * Do an extra check to see if this is the root device.  We
 		 * can't trust /etc/mtab, and /proc/mounts will only list
@@ -102,7 +102,7 @@ static errcode_t check_mntent_file(const char *mtab_file, const char *file,
 #endif	/* __GNU__ */
 		goto errout;
 	}
-#ifndef __GNU__ /* The GNU hurd is deficient; what else is new? */
+#ifndef __GNU__     /* The GNU hurd is deficient; what else is new? */
 	/* Validate the entry in case /etc/mtab is out of date */
 	/*
 	 * We need to be paranoid, because some broken distributions
@@ -243,7 +243,7 @@ static int is_swap_device(const char *file)
 	int		ret = 0;
 
 	file_dev = 0;
-#ifndef __GNU__ /* The GNU hurd is broken with respect to stat devices */
+#ifndef __GNU__     /* The GNU hurd is broken with respect to stat devices */
 	if ((stat(file, &st_buf) == 0) &&
 	    S_ISBLK(st_buf.st_mode))
 		file_dev = st_buf.st_rdev;

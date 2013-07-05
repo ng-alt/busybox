@@ -123,7 +123,7 @@ static void s_child(int sig_no)
 static void s_term(int sig_no)
 {
 	sigterm = 1;
-	write(selfpipe[1], "", 1); /* XXX */
+	write(selfpipe[1], "", 1);
 }
 
 static char *add_str(char *p, const char *to_add)

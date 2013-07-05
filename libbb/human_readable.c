@@ -69,16 +69,6 @@ const char *make_human_readable_str(unsigned long long size,
 			++val;
 			frac = 0;
 		}
-#if 0
-		/* Sample code to omit decimal point and tenths digit. */
-		if (/* no_tenths */ 1) {
-			if (frac >= 5) {
-				++val;
-			}
-			f = "%llu%*c" /* fmt_no_tenths */;
-			frac = 1;
-		}
-#endif
 	}
 
 	/* If f==fmt then 'frac' and 'u' are ignored. */

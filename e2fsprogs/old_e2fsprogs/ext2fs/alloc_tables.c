@@ -115,4 +115,3 @@ errcode_t ext2fs_allocate_tables(ext2_filsys fs)
 	}
 	return 0;
 }
-

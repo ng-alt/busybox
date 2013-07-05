@@ -351,11 +351,6 @@ ext2_off_t ext2fs_file_get_size(ext2_file_t file)
 	return size;
 }
 
-/*
- * This function sets the size of the file, truncating it if necessary
- *
- * XXX still need to call truncate
- */
 errcode_t ext2fs_file_set_size(ext2_file_t file, ext2_off_t size)
 {
 	errcode_t	retval;
@@ -369,9 +364,6 @@ errcode_t ext2fs_file_set_size(ext2_file_t file, ext2_off_t size)
 			return retval;
 	}
 
-	/*
-	 * XXX truncate inode if necessary
-	 */
 
 	return 0;
 }

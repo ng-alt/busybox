@@ -66,37 +66,11 @@ struct statics {
 	char getgrgid_buffer[GRP_BUFFER_SIZE];
 	char getpwnam_buffer[PWD_BUFFER_SIZE];
 	char getgrnam_buffer[GRP_BUFFER_SIZE];
-#if 0
-	struct passwd fgetpwent_resultbuf;
-	struct group fgetgrent_resultbuf;
-	struct spwd fgetspent_resultbuf;
-	char fgetpwent_buffer[PWD_BUFFER_SIZE];
-	char fgetgrent_buffer[GRP_BUFFER_SIZE];
-	char fgetspent_buffer[PWD_BUFFER_SIZE];
-#endif
-#if 0 //ENABLE_USE_BB_SHADOW
-	struct spwd getspuid_resultbuf;
-	struct spwd getspnam_resultbuf;
-	char getspuid_buffer[PWD_BUFFER_SIZE];
-	char getspnam_buffer[PWD_BUFFER_SIZE];
-#endif
 // Not converted - too small to bother
 //pthread_mutex_t mylock = PTHREAD_MUTEX_INITIALIZER;
 //FILE *pwf /*= NULL*/;
 //FILE *grf /*= NULL*/;
 //FILE *spf /*= NULL*/;
-#if 0
-	struct passwd getpwent_pwd;
-	struct group getgrent_gr;
-	char getpwent_line_buff[PWD_BUFFER_SIZE];
-	char getgrent_line_buff[GRP_BUFFER_SIZE];
-#endif
-#if 0 //ENABLE_USE_BB_SHADOW
-	struct spwd getspent_spwd;
-	struct spwd sgetspent_spwd;
-	char getspent_line_buff[PWD_BUFFER_SIZE];
-	char sgetspent_line_buff[PWD_BUFFER_SIZE];
-#endif
 };
 
 static struct statics *ptr_to_statics;
@@ -184,43 +158,8 @@ int fgetspent_r(FILE *__restrict stream, struct spwd *__restrict resultbuf,
  * TODO: audit & stop using these in bbox, they pull in static buffers */
 /**********************************************************************/
 
-#if 0
-struct passwd *fgetpwent(FILE *stream)
-{
-	struct statics *S;
-	struct passwd *resultbuf = RESULTBUF(fgetpwent);
-	char *buffer = BUFFER(fgetpwent);
-	struct passwd *result;
-
-	fgetpwent_r(stream, resultbuf, buffer, sizeof(BUFFER(fgetpwent)), &result);
-	return result;
-}
-
-struct group *fgetgrent(FILE *stream)
-{
-	struct statics *S;
-	struct group *resultbuf = RESULTBUF(fgetgrent);
-	char *buffer = BUFFER(fgetgrent);
-	struct group *result;
-
-	fgetgrent_r(stream, resultbuf, buffer, sizeof(BUFFER(fgetgrent)), &result);
-	return result;
-}
-#endif
 
 #if ENABLE_USE_BB_SHADOW
-#if 0
-struct spwd *fgetspent(FILE *stream)
-{
-	struct statics *S;
-	struct spwd *resultbuf = RESULTBUF(fgetspent);
-	char *buffer = BUFFER(fgetspent);
-	struct spwd *result;
-
-	fgetspent_r(stream, resultbuf, buffer, sizeof(BUFFER(fgetspent)), &result);
-	return result;
-}
-#endif
 
 int sgetspent_r(const char *string, struct spwd *result_buf,
 				char *buffer, size_t buflen, struct spwd **result)
@@ -323,41 +262,6 @@ struct group *getgrgid(gid_t gid)
 	return result;
 }
 
-#if 0 //ENABLE_USE_BB_SHADOW
-/* This function is non-standard and is currently not built.  It seems
- * to have been created as a reentrant version of the non-standard
- * functions getspuid.  Why getspuid was added, I do not know. */
-int getspuid_r(uid_t uid, struct spwd *__restrict resultbuf,
-		       char *__restrict buffer, size_t buflen,
-		       struct spwd **__restrict result)
-{
-	int rv;
-	struct passwd *pp;
-	struct passwd password;
-	char pwd_buff[PWD_BUFFER_SIZE];
-
-	*result = NULL;
-	rv = getpwuid_r(uid, &password, pwd_buff, sizeof(pwd_buff), &pp);
-	if (!rv) {
-		rv = getspnam_r(password.pw_name, resultbuf, buffer, buflen, result);
-	}
-
-	return rv;
-}
-
-/* This function is non-standard and is currently not built.
- * Why it was added, I do not know. */
-struct spwd *getspuid(uid_t uid)
-{
-	struct statics *S;
-	struct spwd *resultbuf = RESULTBUF(getspuid);
-	char *buffer = BUFFER(getspuid);
-	struct spwd *result;
-
-	getspuid_r(uid, resultbuf, buffer, sizeof(BUFFER(getspuid)), &result);
-	return result;
-}
-#endif
 
 /* This one has many users */
 struct passwd *getpwnam(const char *name)
@@ -383,18 +287,6 @@ struct group *getgrnam(const char *name)
 	return result;
 }
 
-#if 0 //ENABLE_USE_BB_SHADOW
-struct spwd *getspnam(const char *name)
-{
-	struct statics *S;
-	struct spwd *resultbuf = RESULTBUF(getspnam);
-	char *buffer = BUFFER(getspnam);
-	struct spwd *result;
-
-	getspnam_r(name, resultbuf, buffer, sizeof(BUFFER(getspnam)), &result);
-	return result;
-}
-#endif
 
 /* This one doesn't use static buffers */
 int getpw(uid_t uid, char *buf)
@@ -422,7 +314,6 @@ int getpw(uid_t uid, char *buf)
 
 /**********************************************************************/
 
-/* FIXME: we don't have such CONFIG_xx - ?! */
 
 #if defined CONFIG_USE_BB_THREADSAFE_SHADOW && defined PTHREAD_MUTEX_INITIALIZER
 static pthread_mutex_t mylock = PTHREAD_MUTEX_INITIALIZER;
@@ -576,49 +467,7 @@ int getspent_r(struct spwd *resultbuf, char *buffer,
 }
 #endif
 
-#if 0
-struct passwd *getpwent(void)
-{
-	static char line_buff[PWD_BUFFER_SIZE];
-	static struct passwd pwd;
-	struct passwd *result;
 
-	getpwent_r(&pwd, line_buff, sizeof(line_buff), &result);
-	return result;
-}
-
-struct group *getgrent(void)
-{
-	static char line_buff[GRP_BUFFER_SIZE];
-	static struct group gr;
-	struct group *result;
-
-	getgrent_r(&gr, line_buff, sizeof(line_buff), &result);
-	return result;
-}
-#endif
-
-#if 0 //ENABLE_USE_BB_SHADOW
-struct spwd *getspent(void)
-{
-	static char line_buff[PWD_BUFFER_SIZE];
-	static struct spwd spwd;
-	struct spwd *result;
-
-	getspent_r(&spwd, line_buff, sizeof(line_buff), &result);
-	return result;
-}
-
-struct spwd *sgetspent(const char *string)
-{
-	static char line_buff[PWD_BUFFER_SIZE];
-	static struct spwd spwd;
-	struct spwd *result;
-
-	sgetspent_r(string, &spwd, line_buff, sizeof(line_buff), &result);
-	return result;
-}
-#endif
 
 int initgroups(const char *user, gid_t gid)
 {

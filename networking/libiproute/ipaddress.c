@@ -53,17 +53,6 @@ static void print_link_flags(FILE *fp, unsigned flags, unsigned mdown)
 	_PF(POINTOPOINT);
 	_PF(MULTICAST);
 	_PF(NOARP);
-#if 0
-	_PF(ALLMULTI);
-	_PF(PROMISC);
-	_PF(MASTER);
-	_PF(SLAVE);
-	_PF(DEBUG);
-	_PF(DYNAMIC);
-	_PF(AUTOMEDIA);
-	_PF(PORTSEL);
-	_PF(NOTRAILERS);
-#endif
 	_PF(UP);
 #undef _PF
 	if (flags)

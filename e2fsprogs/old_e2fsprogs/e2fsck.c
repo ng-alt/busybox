@@ -1753,7 +1753,7 @@ static errcode_t e2fsck_journal_fix_bad_inode(e2fsck_t ctx,
 				       "filesystem is now ext2 only ***\n\n");
 			sb->s_feature_compat &= ~EXT3_FEATURE_COMPAT_HAS_JOURNAL;
 			sb->s_journal_inum = 0;
-			ctx->flags |= E2F_FLAG_JOURNAL_INODE; /* FIXME: todo */
+			ctx->flags |= E2F_FLAG_JOURNAL_INODE;
 			e2fsck_clear_recover(ctx, 1);
 			return 0;
 		}
@@ -2072,17 +2072,6 @@ no_has_journal:
 			sb->s_state &= ~EXT2_VALID_FS;
 			ext2fs_mark_super_dirty(ctx->fs);
 		}
-		/*
-		 * If the user answers no to the above question, we
-		 * ignore the fact that journal apparently has data;
-		 * accidentally replaying over valid data would be far
-		 * worse than skipping a questionable recovery.
-		 *
-		 * XXX should we abort with a fatal error here?  What
-		 * will the ext3 kernel code do if a filesystem with
-		 * !NEEDS_RECOVERY but with a non-zero
-		 * journal->j_superblock->s_start is mounted?
-		 */
 	}
 
 	e2fsck_journal_release(ctx, journal, reset, 0);
@@ -3454,23 +3443,6 @@ static void e2fsck_pass1(e2fsck_t ctx)
 			check_blocks(ctx, &pctx, block_buf);
 			continue;
 		}
-		/*
-		 * Check for inodes who might have been part of the
-		 * orphaned list linked list.  They should have gotten
-		 * dealt with by now, unless the list had somehow been
-		 * corrupted.
-		 *
-		 * FIXME: In the future, inodes which are still in use
-		 * (and which are therefore) pending truncation should
-		 * be handled specially.  Right now we just clear the
-		 * dtime field, and the normal e2fsck handling of
-		 * inodes where i_size and the inode blocks are
-		 * inconsistent is to fix i_size, instead of releasing
-		 * the extra blocks.  This won't catch the inodes that
-		 * was at the end of the orphan list, but it's better
-		 * than nothing.  The right answer is that there
-		 * shouldn't be any bugs in the orphan list handling.  :-)
-		 */
 		if (inode->i_dtime && !busted_fs_time &&
 		    inode->i_dtime < ctx->fs->super->s_inodes_count) {
 			if (fix_problem(ctx, PR_1_LOW_DTIME, &pctx)) {
@@ -4079,7 +4051,6 @@ static int handle_htree(e2fsck_t ctx, struct problem_context *pctx,
 	if (retval && fix_problem(ctx, PR_1_HTREE_BADROOT, pctx))
 		return 1;
 
-	/* XXX should check that beginning matches a directory */
 	root = (struct ext2_dx_root_info *) (block_buf + 24);
 
 	if ((root->reserved_zero || root->info_length < 8) &&
@@ -5506,14 +5477,8 @@ static void e2fsck_pass2(e2fsck_t ctx)
 			    !(dx_db->flags & (DX_FLAG_FIRST | DX_FLAG_LAST)))
 				continue;
 			dx_parent = &dx_dir->dx_block[dx_db->parent];
-			/*
-			 * XXX Make sure dx_parent->min_hash > dx_db->min_hash
-			 */
 			if (dx_db->flags & DX_FLAG_FIRST)
 				dx_parent->min_hash = dx_db->min_hash;
-			/*
-			 * XXX Make sure dx_parent->max_hash < dx_db->max_hash
-			 */
 			if (dx_db->flags & DX_FLAG_LAST)
 				dx_parent->max_hash = dx_db->max_hash;
 		}
@@ -11920,10 +11885,6 @@ static void check_super_block(e2fsck_t ctx)
 		}
 	}
 
-	/* FIXME - HURD support?
-	 * For the Hurd, check to see if the filetype option is set,
-	 * since it doesn't support it.
-	 */
 	if (!(ctx->options & E2F_OPT_READONLY) &&
 	    fs->super->s_creator_os == EXT2_OS_HURD &&
 	    (fs->super->s_feature_incompat &
@@ -13075,7 +13036,6 @@ static errcode_t PRS(int argc, char **argv, e2fsck_t *ret_ctx)
 			ctx->options |= E2F_OPT_YES;
 			break;
 		case 't':
-			/* FIXME - This needs to go away in a future path - will change binary */
 			fprintf(stderr, _("The -t option is not "
 				"supported on this version of e2fsck.\n"));
 			break;
@@ -13403,7 +13363,6 @@ restart:
 		goto get_newer;
 	}
 #ifdef ENABLE_COMPRESSION
-	/* FIXME - do we support this at all? */
 	if (sb->s_feature_incompat & EXT2_FEATURE_INCOMPAT_COMPRESSION)
 		bb_error_msg(_("Warning: compression support is experimental."));
 #endif

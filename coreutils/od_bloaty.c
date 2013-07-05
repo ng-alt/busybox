@@ -391,7 +391,6 @@ print_named_ascii(size_t n_bytes, const char *block,
 	};
 	// buf[N] pos:  01234 56789
 	char buf[12] = "   x\0 0xx\0";
-	// actually "   x\0 xxx\0", but I want to share the string with below.
 	// [12] because we take three 32bit stack slots anyway, and
 	// gcc is too dumb to initialize with constant stores,
 	// it copies initializer from rodata. Oh well.
@@ -1318,14 +1317,6 @@ int od_main(int argc, char **argv)
 	if (flag_dump_strings && n_specs > 0)
 		bb_error_msg_and_die("no type may be specified when dumping strings");
 
-	/* If the --traditional option is used, there may be from
-	 * 0 to 3 remaining command line arguments;  handle each case
-	 * separately.
-	 * od [file] [[+]offset[.][b] [[+]label[.][b]]]
-	 * The offset and pseudo_start have the same syntax.
-	 *
-	 * FIXME: POSIX 1003.1-2001 with XSI requires support for the
-	 * traditional syntax even if --traditional is not given.  */
 
 #if ENABLE_GETOPT_LONG
 	if (opt & OPT_traditional) {

@@ -98,7 +98,7 @@ enum {
 #endif
 
 #ifndef RB_HALT_SYSTEM
-	RB_HALT_SYSTEM = 0xcdef0123, /* FIXME: this overflows enum */
+	RB_HALT_SYSTEM = 0xcdef0123,
 	RB_ENABLE_CAD = 0x89abcdef,
 	RB_DISABLE_CAD = 0,
 	RB_POWER_OFF = 0x4321fedc,
@@ -519,8 +519,6 @@ static int waitfor(const struct init_action *a, pid_t pid)
 			/* we missed its termination */
 			break;
 		}
-		/* FIXME other errors should maybe trigger an error, but allow
-		 * the program to continue */
 	}
 	return wpid;
 }
@@ -794,7 +792,6 @@ static void parse_inittab(void)
 			continue;
 
 		/* Trim the trailing \n */
-		//XXX: chomp() ?
 		eol = strrchr(id, '\n');
 		if (eol != NULL)
 			*eol = '\0';

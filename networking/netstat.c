@@ -79,12 +79,6 @@ typedef enum {
 #define PRINT_NET_CONN              "%s   %6ld %6ld %-23s %-23s %-12s\n"
 #define PRINT_NET_CONN_HEADER       "\nProto Recv-Q Send-Q %-23s %-23s State\n"
 
-/* When there are IPv6 connections the IPv6 addresses will be
- * truncated to none-recognition. The '-W' option makes the
- * address columns wide enough to accomodate for longest possible
- * IPv6 addresses, i.e. addresses of the form
- * xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:ddd.ddd.ddd.ddd
- */
 #define PRINT_IP_MAX_SIZE_WIDE      51  /* INET6_ADDRSTRLEN + 5 for the port number */
 #define PRINT_NET_CONN_WIDE         "%s   %6ld %6ld %-51s %-51s %-12s\n"
 #define PRINT_NET_CONN_HEADER_WIDE  "\nProto Recv-Q Send-Q %-51s %-51s State\n"
@@ -529,7 +523,7 @@ int netstat_main(int argc, char **argv)
 		flags |= opt;
 	}
 	if (flags & (NETSTAT_TCP|NETSTAT_UDP|NETSTAT_RAW)) {
-		printf("Active Internet connections ");	/* xxx */
+		printf("Active Internet connections ");
 
 		if ((flags & (NETSTAT_LISTENING|NETSTAT_CONNECTED)) == (NETSTAT_LISTENING|NETSTAT_CONNECTED))
 			printf("(servers and established)");

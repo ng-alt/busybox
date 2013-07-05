@@ -34,7 +34,6 @@ int open_transformer(int src_fd,
 #endif
 		/* child process */
 		close(fd_pipe[0]); /* We don't wan't to read from the parent */
-		// FIXME: error check?
 #if BB_MMU
 		transformer(src_fd, fd_pipe[1]);
 		if (ENABLE_FEATURE_CLEAN_UP) {

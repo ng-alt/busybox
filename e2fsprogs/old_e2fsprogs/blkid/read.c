@@ -28,7 +28,6 @@
 #define __USE_ISOC9X
 #define STRTOULL strtoull /* defined in stdlib.h if you try hard enough */
 #else
-/* FIXME: need to support real strtoull here */
 #define STRTOULL strtoul
 #endif
 
@@ -245,22 +244,6 @@ static int parse_token(char **name, char **value, char **cp)
 /*
  * Extract a tag of the form <NAME>value</NAME> from the line.
  */
-/*
-static int parse_xml(char **name, char **value, char **cp)
-{
-	char *end;
-
-	if (!name || !value || !cp)
-		return -BLKID_ERR_PARAM;
-
-	*name = strip_line(*cp);
-
-	if ((*name)[0] != '<' || (*name)[1] == '/')
-		return 0;
-
-	FIXME: finish this.
-}
-*/
 
 /*
  * Extract a tag from the line.
@@ -288,7 +271,6 @@ static int parse_tag(blkid_cache cache, blkid_dev dev, char **cp)
 	else if (!strcmp(name, "PRI"))
 		dev->bid_pri = strtol(value, 0, 0);
 	else if (!strcmp(name, "TIME"))
-		/* FIXME: need to parse a long long eventually */
 		dev->bid_time = strtol(value, 0, 0);
 	else
 		ret = blkid_set_tag(dev, name, value, strlen(value));

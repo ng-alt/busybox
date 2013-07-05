@@ -140,4 +140,3 @@ applets/usage:
 	$(HOSTCC) -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer      -I$(srctree)/include -o applets/usage applets/usage.c
 include/usage_compressed.h: $(srctree)/include/usage.h applets/usage
 	$(srctree)/applets/usage_compressed include/usage_compressed.h applets
-

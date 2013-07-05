@@ -147,7 +147,6 @@ int dd_main(int argc, char **argv)
 		char *key;
 		char *arg = argv[n];
 
-//XXX:FIXME: we reject plain "dd --" This would cost ~20 bytes, so..
 //if (*arg == '-' && *++arg == '-' && !*++arg) continue;
 		key = strstr(arg, "=");
 		if (key == NULL)
@@ -220,7 +219,6 @@ int dd_main(int argc, char **argv)
 		if (what == OP_of)
 			outfile = arg;
 	}
-//XXX:FIXME for huge ibs or obs, malloc'ing them isn't the brightest idea ever
 	ibuf = obuf = xmalloc(ibs);
 	if (ibs != obs) {
 		flags |= FLAG_TWOBUFS;

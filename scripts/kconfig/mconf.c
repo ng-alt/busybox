@@ -507,10 +507,6 @@ static int exec_conf(void)
 		printf("\finterrupted(%d)\n", WTERMSIG(stat));
 		exit(1);
 	}
-#if 0
-	printf("\fexit state: %d\nexit data: '%s'\n", WEXITSTATUS(stat), input_buf);
-	sleep(1);
-#endif
 	sigpending(&sset);
 	if (sigismember(&sset, SIGINT)) {
 		printf("\finterrupted\n");

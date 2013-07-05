@@ -396,7 +396,6 @@ void write_leases(void)
 				else leases[i].expires -= curr;
 			} /* else stick with the time we got */
 			leases[i].expires = htonl(leases[i].expires);
-			// FIXME: error check??
 			full_write(fp, &leases[i], sizeof(leases[i]));
 
 			/* then restore it when done */

@@ -1045,7 +1045,6 @@ static char *strsave(const char *s, int a)
 
 	cp = space(strlen(s) + 1);
 	if (cp == NULL) {
-// FIXME: I highly doubt this is good.
 		return (char*)"";
 	}
 	setarea(cp, a);
@@ -1079,7 +1078,6 @@ static const char *findeq(const char *cp)
  */
 static struct var *lookup(const char *n)
 {
-// FIXME: dirty hack
 	static struct var dummy;
 
 	struct var *vp;
@@ -4160,7 +4158,6 @@ static int grave(int quoted)
 		return 1;
 	}
 	/* allow trapped signals */
-	/* XXX - Maybe this signal stuff should go as well? */
 	for (j = 0; j <= _NSIG; j++)
 		if (ourtrap[j] && signal(j, SIG_IGN) != SIG_IGN)
 			signal(j, SIG_DFL);
@@ -4281,7 +4278,6 @@ static void globname(char *we, char *pp)
 	}
 	dname[NAME_MAX] = '\0';
 	while ((de = readdir(dirp)) != NULL) {
-		/* XXX Hmmm... What this could be? (abial) */
 		/*
 		   if (ent[j].d_ino == 0)
 		      continue;

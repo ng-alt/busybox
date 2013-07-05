@@ -147,20 +147,6 @@ enum {
 	HTTP_NOT_IMPLEMENTED = 501,   /* used for unrecognized requests */
 	HTTP_INTERNAL_SERVER_ERROR = 500,
 	HTTP_CONTINUE = 100,
-#if 0   /* future use */
-	HTTP_SWITCHING_PROTOCOLS = 101,
-	HTTP_CREATED = 201,
-	HTTP_ACCEPTED = 202,
-	HTTP_NON_AUTHORITATIVE_INFO = 203,
-	HTTP_NO_CONTENT = 204,
-	HTTP_MULTIPLE_CHOICES = 300,
-	HTTP_MOVED_PERMANENTLY = 301,
-	HTTP_NOT_MODIFIED = 304,
-	HTTP_PAYMENT_REQUIRED = 402,
-	HTTP_BAD_GATEWAY = 502,
-	HTTP_SERVICE_UNAVAILABLE = 503, /* overload, maintenance */
-	HTTP_RESPONSE_SETSIZE = 0xffffffff
-#endif
 };
 
 static const uint16_t http_response_type[] ALIGN2 = {
@@ -175,16 +161,6 @@ static const uint16_t http_response_type[] ALIGN2 = {
 	HTTP_BAD_REQUEST,
 	HTTP_FORBIDDEN,
 	HTTP_INTERNAL_SERVER_ERROR,
-#if 0   /* not implemented */
-	HTTP_CREATED,
-	HTTP_ACCEPTED,
-	HTTP_NO_CONTENT,
-	HTTP_MULTIPLE_CHOICES,
-	HTTP_MOVED_PERMANENTLY,
-	HTTP_NOT_MODIFIED,
-	HTTP_BAD_GATEWAY,
-	HTTP_SERVICE_UNAVAILABLE,
-#endif
 };
 
 static const struct {
@@ -202,16 +178,6 @@ static const struct {
 	{ "Bad Request", "Unsupported method" },
 	{ "Forbidden", ""  },
 	{ "Internal Server Error", "Internal Server Error" },
-#if 0   /* not implemented */
-	{ "Created" },
-	{ "Accepted" },
-	{ "No Content" },
-	{ "Multiple Choices" },
-	{ "Moved Permanently" },
-	{ "Not Modified" },
-	{ "Bad Gateway", "" },
-	{ "Service Unavailable", "" },
-#endif
 };
 
 struct globals {
@@ -303,9 +269,8 @@ static void free_llist(has_next_ptr **pptr)
 	*pptr = NULL;
 }
 
-#if ENABLE_FEATURE_HTTPD_BASIC_AUTH \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
+#if ENABLE_FEATURE_HTTPD_BASIC_AUTH || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES || \
+	ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
 static ALWAYS_INLINE void free_Htaccess_list(Htaccess **pptr)
 {
 	free_llist((has_next_ptr**)pptr);
@@ -372,10 +337,8 @@ static int scan_ip_mask(const char *str, unsigned *ipp, unsigned *maskp)
 		return i;
 
 	if (*str) {
-		/* there is /xxx after dotted-IP address */
 		i = bb_strtou(str, &p, 10);
 		if (*p == '.') {
-			/* 'xxx' itself is dotted-IP mask, parse it */
 			/* (return 0 (success) only if it has N.N.N.N form) */
 			return scan_ip(&str, maskp, '\0') - 32;
 		}
@@ -432,9 +395,8 @@ static void parse_conf(const char *path, int flag)
 #if ENABLE_FEATURE_HTTPD_BASIC_AUTH
 	Htaccess *prev;
 #endif
-#if ENABLE_FEATURE_HTTPD_BASIC_AUTH \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
+#if ENABLE_FEATURE_HTTPD_BASIC_AUTH || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES || \
+	ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
 	Htaccess *cur;
 #endif
 	const char *cf = configFile;
@@ -446,9 +408,8 @@ static void parse_conf(const char *path, int flag)
 	/* discard old rules */
 	free_Htaccess_IP_list(&ip_a_d);
 	flg_deny_all = 0;
-#if ENABLE_FEATURE_HTTPD_BASIC_AUTH \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
+#if ENABLE_FEATURE_HTTPD_BASIC_AUTH || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES || \
+	ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
 	/* retain previous auth and mime config only for subdir parse */
 	if (flag != SUBDIR_PARSE) {
 #if ENABLE_FEATURE_HTTPD_BASIC_AUTH
@@ -602,9 +563,8 @@ static void parse_conf(const char *path, int flag)
 		}
 #endif
 
-#if ENABLE_FEATURE_HTTPD_BASIC_AUTH \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES \
- || ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
+#if ENABLE_FEATURE_HTTPD_BASIC_AUTH || ENABLE_FEATURE_HTTPD_CONFIG_WITH_MIME_TYPES || \
+	ENABLE_FEATURE_HTTPD_CONFIG_WITH_SCRIPT_INTERPR
 		/* storing current config line */
 		cur = xzalloc(sizeof(Htaccess) + strlen(p0));
 		if (cur) {
@@ -1359,11 +1319,6 @@ static void send_file_and_exit(const char *url, int headers)
 		".mpe.mpeg", "video/mpeg",
 		".mid.midi", "audio/midi",
 		".mp3",      "audio/mpeg",
-#if 0                        /* unpopular */
-		".au",       "audio/basic",
-		".pac",      "application/x-ns-proxy-autoconfig",
-		".vrml.wrl", "model/vrml",
-#endif
 		NULL
 	};
 

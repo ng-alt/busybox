@@ -50,7 +50,7 @@
 #define RTF_REJECT      0x0200	/* Reject route                 */
 #endif
 
-#if defined(SIOCADDRTOLD) || defined(RTF_IRTT)	/* route */
+#if defined(SIOCADDRTOLD) || defined(RTF_IRTT)	    /* route */
 #define HAVE_NEW_ADDRT 1
 #endif
 
@@ -273,12 +273,7 @@ static void INET_setroute(int action, char **args)
 		if (k == KW_IPVx_IRTT) {
 			rt.rt_flags |= RTF_IRTT;
 			rt.rt_irtt = xatoul(args_m1);
-			rt.rt_irtt *= (sysconf(_SC_CLK_TCK) / 100);	/* FIXME */
-#if 0					/* FIXME: do we need to check anything of this? */
-			if (rt.rt_irtt < 1 || rt.rt_irtt > (120 * HZ)) {
-				bb_error_msg_and_die("bad irtt");
-			}
-#endif
+			rt.rt_irtt *= (sysconf(_SC_CLK_TCK) / 100);
 			continue;
 		}
 #endif
