@@ -39,6 +39,22 @@ RB_AUTOBOOT
 	if (flags & 1) sleep(xatou(delay));
 	if (!(flags & 2)) sync();
 
+#ifdef __CONFIG_DHDAP__
+	/*
+	 * Unloading the DHD driver before reboot to fix some corner case
+	 * issues while switching from DHDAP builds to regular NIC driver
+	 * builds (both using 43602). rmmod will force a dongle reset.
+	 */
+	{
+		char *args[3];
+		args[0] = (char*)"rmmod";
+		args[1] = (char*)"dhd.ko";
+		args[2] = NULL;
+		if (spawn_and_wait(args))
+			bb_perror_msg("rmmod dhd failed");
+	}
+#endif
+
 	/* Perform action. */
 	if (ENABLE_INIT && !(flags & 4)) {
 		if (ENABLE_FEATURE_INITRD) {
