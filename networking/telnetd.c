@@ -148,10 +148,10 @@ static int
 getpty(char *line, int size)
 {
 	int p;
-    /* modified start, water, @telnet not workable, 09/11/02*/
+    /*foxconn modified start, water, @telnet not workable, 09/11/02*/
 //#if ENABLE_FEATURE_DEVPTS
 #if 0
-    /* modified end, water, @telnet not workable, 09/11/02*/
+    /*foxconn modified end, water, @telnet not workable, 09/11/02*/
 	p = open("/dev/ptmx", O_RDWR);
 	if (p > 0) {
 		const char *name;

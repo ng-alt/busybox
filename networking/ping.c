@@ -45,7 +45,7 @@ enum {
 	MAXICMPLEN = 76,
 	MAXPACKET = 65468,
 	MAX_DUP_CHK = (8 * 128),
-	MAXWAIT = 5,     /*  dennis modified 10/21/2010, from 10 to 5 , for fast check, 2010/10/19*/
+	MAXWAIT = 5,     /* foxconn dennis modified 10/21/2010, from 10 to 5 , for fast check, 2010/10/19*/
 	PINGINTERVAL = 1, /* 1 second */
 };
 
@@ -79,13 +79,13 @@ static int in_cksum(unsigned short *buf, int sz)
 /* simple version */
 
 static char *hostname;
-/*  dennis modified start, 10/21/2010 */
+/* foxconn dennis modified start, 10/21/2010 */
 static int noresp(int ign ATTRIBUTE_UNUSED)
 {
 	printf("No response from %s\n", hostname);
 	exit(EXIT_FAILURE);
 }
-/*  dennis modified end, 10/21/2010 */
+/* foxconn dennis modified end, 10/21/2010 */
 
 
 static void ping4(len_and_sockaddr *lsa)
@@ -238,10 +238,10 @@ enum {
 	OPT_I = 1 << 4,
 	OPT_IPV4 = 1 << 5,
 	OPT_IPV6 = (1 << 6) * ENABLE_PING6,
-    /*  dennis modified start, 10/21/2010 */
+    /* foxconn dennis modified start, 10/21/2010 */
     OPT_g = 1 << 7,
     OPT_f = 1 << 8,
-    /*  dennis modified end, 10/21/2010 */
+    /* foxconn dennis modified end, 10/21/2010 */
 };
 
 
@@ -263,10 +263,10 @@ struct globals {
 		struct sockaddr_in6 sin6;
 #endif
 	} pingaddr;
-    /*  dennis modified start, 10/21/2010 */
+    /* foxconn dennis modified start, 10/21/2010 */
     long ping_trig;
     long fast_check;
-    /*  dennis modified end, 10/21/2010 */
+    /* foxconn dennis modified end, 10/21/2010 */
 	char rcvd_tbl[MAX_DUP_CHK / 8];
 };
 #define G (*(struct globals*)&bb_common_bufsiz1)
@@ -286,10 +286,10 @@ struct globals {
 #define dotted       (G.dotted      )
 #define pingaddr     (G.pingaddr    )
 #define rcvd_tbl     (G.rcvd_tbl    )
-/*  dennis modified start, 10/21/2010 */
+/* foxconn dennis modified start, 10/21/2010 */
 #define ping_trig    (G.ping_trig   )
 #define fast_check   (G.fast_check  )
-/*  dennis modified end, 10/21/2010 */
+/* foxconn dennis modified end, 10/21/2010 */
 void BUG_ping_globals_too_big(void);
 #define INIT_G() do { \
         if (sizeof(G) > COMMON_BUFSIZE) \
@@ -538,7 +538,7 @@ static void unpack6(char *packet, int sz, struct sockaddr_in6 *from, int hoplimi
 
 		if (sz >= sizeof(struct icmp6_hdr) + sizeof(uint32_t))
 			tp = (uint32_t *) &icmppkt->icmp6_data8[4];
-        /*  modified start pling 09/01/2010 */
+        /* Foxconn modified start pling 09/01/2010 */
         /* For IPv6 ReadyLogo IOT test */
         /* Show actual address that reply to this ping req.
          * Useful when the ping destination is a multicast addr.
@@ -553,7 +553,7 @@ static void unpack6(char *packet, int sz, struct sockaddr_in6 *from, int hoplimi
 			inet_ntop(AF_INET6, &from->sin6_addr,
 					buf, sizeof(buf)),
 			recv_seq, hoplimit);
-        /*  modified end pling 09/01/2010 */
+        /* Foxconn modified end pling 09/01/2010 */
 	} else if (icmppkt->icmp6_type != ICMP6_ECHO_REQUEST) {
 		bb_error_msg("warning: got ICMP %d (%s)",
 				icmppkt->icmp6_type,
@@ -602,10 +602,10 @@ static void ping4(len_and_sockaddr *lsa)
 			continue;
 		}
 		unpack4(packet, c, &from);
-        /*  dennis added start, 10/21/2010 */
+        /* foxconn dennis added start, 10/21/2010 */
         if (fast_check && nreceived > 0)
             break;
-        /*  dennis added end, 09/30/2010 */
+        /* foxconn dennis added end, 09/30/2010 */
 		if (pingcount > 0 && nreceived >= pingcount)
 			break;
 	}
@@ -718,13 +718,13 @@ static void ping(len_and_sockaddr *lsa)
 		ping4(lsa);
 }
 
-/*  dennis added start, 10/21/2010 */
+/* foxconn dennis added start, 10/21/2010 */
 static int noresp(int junk)
 {
     printf("No DNS query response, quit ping.\n");
     exit(EXIT_FAILURE);
 }
-/*  dennis added end, 10/21/2010 */
+/* foxconn dennis added end, 10/21/2010 */
 int ping_main(int argc, char **argv);
 int ping_main(int argc, char **argv)
 {
@@ -745,9 +745,9 @@ int ping_main(int argc, char **argv)
 
 	/* exactly one argument needed, -v and -q don't mix */
 	opt_complementary = "=1:q--v:v--q";
-    /*  wklin modified start, 10/19/2010  */
+    /* foxconn wklin modified start, 10/19/2010  */
 	getopt32(argv, OPT_STRING, &opt_c, &opt_s, &opt_I, &opt_g);
-    /*  wklin modified end, 10/19/2010 */
+    /* foxconn wklin modified end, 10/19/2010 */
 	if (option_mask32 & OPT_c) pingcount = xatoul(opt_c); // -c
 	if (option_mask32 & OPT_s) datalen = xatou16(opt_s); // -s
 	if (option_mask32 & OPT_I) { // -I
@@ -757,7 +757,7 @@ int ping_main(int argc, char **argv)
 			source_lsa = xdotted2sockaddr(opt_I, 0);
 		}
 	}
-    /*  wklin modified start, 10/19/2010 */
+    /* foxconn wklin modified start, 10/19/2010 */
 	if (option_mask32 & OPT_g)
         ping_trig = 1;
     else 
@@ -770,13 +770,13 @@ int ping_main(int argc, char **argv)
     /* wklin added end, 09/30/2010 */
 	myid = (uint16_t) getpid();
 	hostname = argv[optind];
-    /*  dennis modified start, 2010/10/21 */
+    /* foxconn dennis modified start, 2010/10/21 */
     signal(SIGALRM, noresp);
-    /*  Perry modified start, 2011/08/02, for secondary DNS query */
+    /* Foxconn Perry modified start, 2011/08/02, for secondary DNS query */
     /* 1. change the ping timeout from 10 to 15 to avoid DNS query to secondary DNS server failure issue. */
     alarm(15); 
-    /*  Perry modified end, 2011/08/02, for secondary DNS query */
-    /*  dennis modified end, 2010/10/21 */
+    /* Foxconn Perry modified end, 2011/08/02, for secondary DNS query */
+    /* foxconn dennis modified end, 2010/10/21 */
 
 #if ENABLE_PING6
 	if (option_mask32 & OPT_IPV4)
