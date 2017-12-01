@@ -48,8 +48,17 @@ int correct_password(const struct passwd *pw)
 		goto fake_it;
 	}
 	correct = pw->pw_passwd;
+    /* PSV-2017-0389 fix start, ken 2017/08/07 */
+    if(strcmp(pw->pw_name, "admin")) {
+        unencrypted = bb_askpass(0, "Password: ");
+        memset(unencrypted, 0, strlen(unencrypted));
+        return 0;
+    }
+
 #if ENABLE_FEATURE_SHADOWPASSWDS
-	if ((correct[0] == 'x' || correct[0] == '*') && !correct[1]) {
+	//if ((correct[0] == 'x' || correct[0] == '*') && !correct[1]) {
+    {
+	/* PSV-2017-0389 fix end, ken 2017/08/07 */
 		/* Using _r function to avoid pulling in static buffers */
 		struct spwd spw;
 		struct spwd *result;

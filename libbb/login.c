@@ -92,10 +92,10 @@ void print_login_issue(const char *issue_file, const char *tty)
 void print_login_prompt(void)
 {
 	char buf[MAXHOSTNAMELEN+1];
-
+/* remove hostname for security reason
 	if (gethostname(buf, MAXHOSTNAMELEN) == 0)
 		fputs(buf, stdout);
-
+*/
 	fputs(LOGIN, stdout);
 	fflush(stdout);
 }
