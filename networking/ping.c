@@ -228,7 +228,7 @@ int ping_main(int argc, char **argv)
 
 /* Fxcn modify-S Wins, 0911-09 */
 //#define OPT_STRING ("qvc:s:I:4" USE_PING6("6"))
-#define OPT_STRING ("qvc:s:I:4" USE_PING6("6")"g:f")
+#define OPT_STRING ("qvc:s:I:4" USE_PING6("6")"g:fj:")
 /* Fxcn modify-E Wins, 0911-09 */
 enum {
 	OPT_QUIET = 1 << 0,
@@ -241,6 +241,7 @@ enum {
     /* foxconn dennis modified start, 10/21/2010 */
     OPT_g = 1 << 7,
     OPT_f = 1 << 8,
+    OPT_j = 1 << 9,
     /* foxconn dennis modified end, 10/21/2010 */
 };
 
@@ -737,6 +738,7 @@ int ping_main(int argc, char **argv)
     /*added by dennis start, for fast ping check, 2010/10/19*/
     char *opt_f;
     /*added by dennis end, for fast ping check, 2010/10/19*/
+    char *opt_j;
 	USE_PING6(sa_family_t af = AF_UNSPEC;)
 
 	INIT_G();
@@ -746,7 +748,7 @@ int ping_main(int argc, char **argv)
 	/* exactly one argument needed, -v and -q don't mix */
 	opt_complementary = "=1:q--v:v--q";
     /* foxconn wklin modified start, 10/19/2010  */
-	getopt32(argv, OPT_STRING, &opt_c, &opt_s, &opt_I, &opt_g);
+	getopt32(argv, OPT_STRING, &opt_c, &opt_s, &opt_I, &opt_g, &opt_j);
     /* foxconn wklin modified end, 10/19/2010 */
 	if (option_mask32 & OPT_c) pingcount = xatoul(opt_c); // -c
 	if (option_mask32 & OPT_s) datalen = xatou16(opt_s); // -s
@@ -774,7 +776,10 @@ int ping_main(int argc, char **argv)
     signal(SIGALRM, noresp);
     /* Foxconn Perry modified start, 2011/08/02, for secondary DNS query */
     /* 1. change the ping timeout from 10 to 15 to avoid DNS query to secondary DNS server failure issue. */
-    alarm(15); 
+	if (option_mask32 & OPT_j)
+        alarm(atoi(opt_j));
+	else
+        alarm(15); 
     /* Foxconn Perry modified end, 2011/08/02, for secondary DNS query */
     /* foxconn dennis modified end, 2010/10/21 */
 
