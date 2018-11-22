@@ -379,7 +379,7 @@ CONFIG_DELUSER=y
 # CONFIG_GETTY is not set
 # CONFIG_FEATURE_UTMP is not set
 # CONFIG_FEATURE_WTMP is not set
-# CONFIG_LOGIN is not set
+CONFIG_LOGIN=y
 # CONFIG_PAM is not set
 # CONFIG_LOGIN_SCRIPTS is not set
 # CONFIG_FEATURE_NOLOGIN is not set

@@ -29,7 +29,37 @@
  */
 
 #include "libbb.h"
+#include <openssl/evp.h>
+int evp_sha256(char * in_str, char * digest)
+{
+    EVP_MD_CTX *evp_ctx;
+    const EVP_MD *md;
+    unsigned char dige_value[EVP_MAX_MD_SIZE];
+    int md_len, i;
+    char * str_idx;
 
+    if (digest == NULL || in_str == NULL ) {
+        digest[0] = '\0';
+        return -1;
+    }
+
+    OpenSSL_add_all_digests();
+    md = EVP_get_digestbyname("SHA256");
+    evp_ctx = EVP_MD_CTX_create();
+    EVP_DigestInit_ex(evp_ctx, md, NULL);
+    EVP_DigestUpdate(evp_ctx, in_str, strlen(in_str));
+    EVP_DigestFinal_ex(evp_ctx, dige_value, &md_len);
+    EVP_MD_CTX_destroy(evp_ctx);
+
+    str_idx = digest;
+    for(i = 0; i < md_len; i++) {
+ 	    sprintf(str_idx, "%02x", dige_value[i]);
+        str_idx += 2;
+    }
+
+    /* Call this once before exit. */
+    EVP_cleanup();
+}
 /* Ask the user for a password.
  * Return 1 if the user gives the correct password for entry PW,
  * 0 if not.  Return 1 without asking if PW has an empty password.
@@ -48,8 +78,17 @@ int correct_password(const struct passwd *pw)
 		goto fake_it;
 	}
 	correct = pw->pw_passwd;
+    /* PSV-2017-0389 fix start, ken 2017/08/07 */
+    if(strcmp(pw->pw_name, "admin")) {
+        unencrypted = bb_askpass(0, "Password: ");
+        memset(unencrypted, 0, strlen(unencrypted));
+        return 0;
+    }
+
 #if ENABLE_FEATURE_SHADOWPASSWDS
-	if ((correct[0] == 'x' || correct[0] == '*') && !correct[1]) {
+	//if ((correct[0] == 'x' || correct[0] == '*') && !correct[1]) {
+    {
+	/* PSV-2017-0389 fix end, ken 2017/08/07 */
 		/* Using _r function to avoid pulling in static buffers */
 		struct spwd spw;
 		struct spwd *result;
@@ -66,7 +105,16 @@ int correct_password(const struct passwd *pw)
 	if (!unencrypted) {
 		return 0;
 	}
+#if 0
 	encrypted = crypt(unencrypted, correct);
 	memset(unencrypted, 0, strlen(unencrypted));
 	return strcmp(encrypted, correct) == 0;
+#else
+    {
+        char sha256_digest[128]="";
+        evp_sha256(unencrypted, sha256_digest);
+	    memset(unencrypted, 0, strlen(unencrypted));
+	    return strcmp(sha256_digest, correct) == 0;
+    }
+#endif
 }

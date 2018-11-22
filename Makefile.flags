@@ -91,3 +91,7 @@ endif
 # TODO: use "make stksizes" to find & fix big stack users
 # (we stole scripts/checkstack.pl from the kernel... thanks guys!)
 FLTFLAGS += -s 20000
+
+ifeq ($(CONFIG_LOGIN),y)
+LDFLAGS += -lcrypto
+endif
