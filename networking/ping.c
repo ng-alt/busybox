@@ -726,6 +726,43 @@ static int noresp(int junk)
     exit(EXIT_FAILURE);
 }
 /* foxconn dennis added end, 10/21/2010 */
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <linux/sockios.h>
+
+int get_if_ipaddr(char *if_name, char *if_ipaddr);
+int get_if_ipaddr(char *if_name, char *if_ipaddr)
+{
+#define sin_addr(s) (((struct sockaddr_in *)(s))->sin_addr)
+    
+    int s;
+    struct ifreq ifr;
+
+    /* Retrieve IP info */
+    if ((s = socket(AF_INET, SOCK_RAW, IPPROTO_RAW)) < 0)
+        return -1;
+
+    strncpy(ifr.ifr_name, if_name, IFNAMSIZ);
+    if (ioctl(s, SIOCGIFADDR, &ifr))
+    {
+        perror(if_name);
+        close(s);
+        return -1;
+    }
+    close(s);
+
+    if (strcmp(if_ipaddr, "0.0.0.0"))
+    {
+        strcpy(if_ipaddr, inet_ntoa(sin_addr(&ifr.ifr_addr)));
+        return 0;
+    }
+
+    return -1;
+}
+
+
 int ping_main(int argc, char **argv);
 int ping_main(int argc, char **argv)
 {
@@ -760,8 +797,15 @@ int ping_main(int argc, char **argv)
 		}
 	}
     /* foxconn wklin modified start, 10/19/2010 */
-	if (option_mask32 & OPT_g)
+	if (option_mask32 & OPT_g) {
         ping_trig = 1;
+        if_index = if_nametoindex("ppp0");
+        if (if_index) {
+            char if_ipaddr[32];
+            if (!get_if_ipaddr("ppp0", if_ipaddr))
+                source_lsa = xdotted2sockaddr(if_ipaddr, 0);
+        }
+    }
     else 
         ping_trig = 0;
     /* with this I can return as soon as I get the first reply */
